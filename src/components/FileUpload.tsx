@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { processDocumentForRAG } from "@/utils/ragUtils";
-import { processImageFile, processPdfFile, processDocxFile } from "@/utils/fileProcessing";
+import { processImageFile, processPdfFile, processDocxFile, processCsvFile } from "@/utils/fileProcessing";
 import { useToast } from "@/hooks/use-toast";
 import { FileInfo } from "./upload/FileInfo";
 import { HelpCircle, FileText, Image as ImageIcon, Upload, X } from "lucide-react";
@@ -131,6 +131,8 @@ export function FileUpload() {
                text = await processPdfFile(file);
            } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
                text = await processDocxFile(file);
+           } else if (file.type === "text/csv" || file.name.toLowerCase().endsWith('.csv')) {
+               text = await processCsvFile(file);
            } else {
                throw new Error("Nieobsługiwany format pliku");
            }

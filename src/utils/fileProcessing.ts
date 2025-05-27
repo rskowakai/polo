@@ -62,6 +62,41 @@ export const ALLOWED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "image/png",
   "image/jpeg",
+  "text/csv",
 ];
 
 export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+
+export const processCsvFile = async (file: File): Promise<string> => {
+  console.log('Rozpoczynam przetwarzanie CSV:', file.name);
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        if (!text) {
+          reject(new Error("Nie udało się odczytać pliku CSV."));
+          return;
+        }
+        // Simple CSV processing: convert each row to a space-separated string
+        // and join rows with newlines.
+        const rows = text.split('\n');
+        const processedText = rows.map(row => {
+          // Basic split by comma, trim whitespace from each cell
+          return row.split(',').map(cell => cell.trim()).join(' ');
+        }).join('\n');
+        
+        console.log('Zakończono przetwarzanie CSV, wyodrębniony tekst:', processedText.substring(0, 100) + '...');
+        resolve(processedText);
+      } catch (error) {
+        console.error('Błąd podczas przetwarzania CSV:', error);
+        reject(error);
+      }
+    };
+    reader.onerror = (error) => {
+      console.error('Błąd odczytu pliku CSV:', error);
+      reject(error);
+    };
+    reader.readAsText(file);
+  });
+};
