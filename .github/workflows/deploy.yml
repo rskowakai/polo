@@ -1,0 +1,95 @@
+name: Production Deploy with Healthcheck & Rollback
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile.prod
+          push: true
+          tags: ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Build & Push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.prod
+          push: true
+          tags: ghcr.io/${{ github.repository }}/frontend:latest
+
+  deploy:
+    name: Deploy to Server with Healthcheck and Rollback
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose and env to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "docker-compose.prod.yml .env"
+          target: "~/app"
+
+      - name: Deploy via SSH with rollback
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            set -e
+            cd ~/app
+            echo "Logging in to GHCR..."
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+
+            echo "Backing up current containers..."
+            docker-compose -f docker-compose.prod.yml ps -q backend | xargs -I {} docker commit {} backend_backup || true
+            docker-compose -f docker-compose.prod.yml ps -q frontend | xargs -I {} docker commit {} frontend_backup || true
+
+            echo "Pulling new images..."
+            docker compose -f docker-compose.prod.yml pull
+
+            echo "Starting new containers..."
+            docker compose -f docker-compose.prod.yml up -d
+
+            echo "Waiting for application healthcheck..."
+            sleep 15
+            if ! curl -f http://localhost:80/api/v1/health/ping; then
+              echo "Healthcheck failed! Rolling back to previous version..."
+              docker tag backend_backup ghcr.io/${{ github.repository }}/backend:latest
+              docker tag frontend_backup ghcr.io/${{ github.repository }}/frontend:latest
+              docker compose -f docker-compose.prod.yml up -d
+              exit 1
+            fi
+
+            echo "Deployment completed successfully!"
