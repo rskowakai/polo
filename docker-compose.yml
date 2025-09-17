@@ -1,0 +1,183 @@
+version: '3.8'
+
+services:
+  # --- Infrastructure ---
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-atomai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-atomai}
+      POSTGRES_DB: ${POSTGRES_DB:-atomai_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-atomai} -d ${POSTGRES_DB:-atomai_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6-alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_storage
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    container_name: rabbitmq_broker
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-guest}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Backend Services ---
+  auth_service:
+    build:
+      context: ./backend/services/auth_service
+    container_name: auth_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/services/auth_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  document_upload_service:
+    build:
+      context: ./backend/services/document_upload_service
+    container_name: document_upload_service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend/services/document_upload_service:/app
+    environment:
+      - S3_ENDPOINT_URL=http://minio:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER:-minioadmin}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
+      - S3_BUCKET_NAME=documents
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  user_management_service:
+    build:
+      context: ./backend/services/user_management_service
+    container_name: user_management_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./backend/services/user_management_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8002 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ai_analysis_service:
+    build:
+      context: ./backend/services/ai_analysis_service
+    container_name: ai_analysis_service
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./backend/services/ai_analysis_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8003 --reload
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  document_generation_service:
+    build:
+      context: ./backend/services/document_generation_service
+    container_name: document_generation_service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./backend/services/document_generation_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8004 --reload
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  payment_service:
+    build:
+      context: ./backend/services/payment_service
+    container_name: payment_service
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./backend/services/payment_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8005 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  notification_service:
+    build:
+      context: ./backend/services/notification_service
+    container_name: notification_service
+    ports:
+      - "8006:8006"
+    volumes:
+      - ./backend/services/notification_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8006 --reload
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  operator_panel_service:
+    build:
+      context: ./backend/services/operator_panel_service
+    container_name: operator_panel_service
+    ports:
+      - "8007:8007"
+    volumes:
+      - ./backend/services/operator_panel_service:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8007 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
