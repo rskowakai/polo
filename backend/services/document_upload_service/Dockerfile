@@ -14,6 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Specify the command to run on container start
-# The port should match the internal port, not the exposed one.
-# The host 0.0.0.0 makes it accessible from outside the container.
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
