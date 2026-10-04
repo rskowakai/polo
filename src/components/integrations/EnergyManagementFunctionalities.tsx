@@ -1,13 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
-import { 
-  Zap,
-  LineChart,
-  Lightbulb,
-  Sun,
-  Car,
-} from "lucide-react";
+import { motion } from 'framer-motion';
+import { Car, Lightbulb, LineChart, Sun, Zap } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { toast } from '@/components/ui/use-toast';
 
 interface EnergyFeature {
   icon: React.ElementType;
@@ -19,30 +13,30 @@ export const EnergyManagementFunctionalities = () => {
   const features: EnergyFeature[] = [
     {
       icon: LineChart,
-      name: "Monitorowanie zużycia energii",
-      description: "Szczegółowe informacje o zużyciu energii przez urządzenia",
+      name: 'Monitorowanie zużycia energii',
+      description: 'Szczegółowe informacje o zużyciu energii przez urządzenia',
     },
     {
       icon: Lightbulb,
-      name: "Optymalizacja zużycia energii",
-      description: "Sugestie zmniejszenia zużycia energii",
+      name: 'Optymalizacja zużycia energii',
+      description: 'Sugestie zmniejszenia zużycia energii',
     },
     {
       icon: Sun,
-      name: "Integracja z panelami fotowoltaicznymi",
-      description: "Informacje o produkcji i zużyciu energii",
+      name: 'Integracja z panelami fotowoltaicznymi',
+      description: 'Informacje o produkcji i zużyciu energii',
     },
     {
       icon: Car,
-      name: "Zarządzanie ładowaniem pojazdów",
-      description: "Automatyczne ładowanie w optymalnych godzinach",
+      name: 'Zarządzanie ładowaniem pojazdów',
+      description: 'Automatyczne ładowanie w optymalnych godzinach',
     },
   ];
 
   const handleFeatureClick = () => {
     toast({
-      title: "Informacja",
-      description: "Funkcja w przygotowaniu",
+      title: 'Informacja',
+      description: 'Funkcja w przygotowaniu',
     });
   };
 
@@ -60,7 +54,7 @@ export const EnergyManagementFunctionalities = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <Card 
+            <Card
               className="p-6 cursor-pointer hover:shadow-lg transition-all"
               onClick={handleFeatureClick}
             >
@@ -68,9 +62,7 @@ export const EnergyManagementFunctionalities = () => {
                 <feature.icon className="h-6 w-6 text-primary" />
                 <div>
                   <h3 className="font-semibold">{feature.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </div>
             </Card>

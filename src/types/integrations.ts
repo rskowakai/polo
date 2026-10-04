@@ -1,13 +1,13 @@
-export type IntegrationType = 
-  | "smartHome" 
-  | "energyManagement" 
-  | "zapier" 
-  | "googleHome" 
-  | "alexa" 
-  | "homeKit" 
-  | "cloudServices" 
-  | "alarmSystems" 
-  | "irrigation";
+export type IntegrationType =
+  | 'smartHome'
+  | 'energyManagement'
+  | 'zapier'
+  | 'googleHome'
+  | 'alexa'
+  | 'homeKit'
+  | 'cloudServices'
+  | 'alarmSystems'
+  | 'irrigation';
 
 export interface IntegrationConfig {
   webhook?: string;
@@ -21,5 +21,5 @@ export interface Integration {
   name: string;
   description: string;
   icon: string;
-  status: "connected" | "disconnected" | "warning";
+  status: 'connected' | 'disconnected' | 'warning';
 }

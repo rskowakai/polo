@@ -1,6 +1,6 @@
-import * as React from "react";
-import { createContext, useContext, useState } from "react";
-import { cn } from "@/lib/utils";
+import type * as React from 'react';
+import { createContext, useContext, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 type SidebarContextType = {
   collapsed: boolean;
@@ -22,7 +22,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 export function useSidebar() {
   const context = useContext(SidebarContext);
   if (!context) {
-    throw new Error("useSidebar must be used within a SidebarProvider");
+    throw new Error('useSidebar must be used within a SidebarProvider');
   }
   return context;
 }
@@ -37,7 +37,7 @@ export function Sidebar({ children, className }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 border-r bg-background transition-all duration-300",
+        'h-screen sticky top-0 border-r bg-background transition-all duration-300',
         className
       )}
     >
@@ -83,14 +83,14 @@ export function SidebarMenuButton({
   asChild?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { collapsed } = useSidebar();
-  const Component = asChild ? "div" : "button";
+  const Component = asChild ? 'div' : 'button';
 
   return (
     <Component
       {...(props as any)}
       className={cn(
-        "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
-        collapsed && "justify-center",
+        'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors',
+        collapsed && 'justify-center',
         className
       )}
     >

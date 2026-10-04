@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { Bike } from 'lucide-react';
 import { createElement } from 'react';
@@ -32,13 +32,13 @@ export const BikeStationsMap = ({ stations }: Props) => {
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap contributors',
     }).addTo(map.current);
 
     // Add markers for each bike station
-    stations.forEach(station => {
+    stations.forEach((station) => {
       if (!map.current) return;
-      
+
       const markerIcon = L.divIcon({
         className: 'bg-transparent',
         html: `<div class="w-6 h-6 bg-primary/90 rounded-full flex items-center justify-center">
@@ -48,10 +48,7 @@ export const BikeStationsMap = ({ stations }: Props) => {
         </div>`,
       });
 
-      L.marker(
-        [station.lat, station.lon],
-        { icon: markerIcon }
-      )
+      L.marker([station.lat, station.lon], { icon: markerIcon })
         .bindPopup(`
           <div class="p-2">
             <h3 class="font-bold">${station.name}</h3>

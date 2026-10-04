@@ -1,23 +1,23 @@
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { motion } from 'framer-motion';
 import {
-  CircuitBoard,
-  Gauge,
   AlertTriangle,
   CheckCircle,
-  XCircle,
-  ServerCog,
+  CircuitBoard,
   Cpu,
   Database,
+  Gauge,
+  ServerCog,
   Signal,
-} from "lucide-react";
-import { motion } from "framer-motion";
+  XCircle,
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 
 interface Device {
   id: string;
   name: string;
-  type: "transformer" | "meter" | "sensor";
-  status: "operational" | "warning" | "error";
+  type: 'transformer' | 'meter' | 'sensor';
+  status: 'operational' | 'warning' | 'error';
   lastUpdate: string;
   metrics: {
     load: number;
@@ -28,11 +28,11 @@ interface Device {
 
 const mockDevices: Device[] = [
   {
-    id: "tr-001",
-    name: "Transformator T1",
-    type: "transformer",
-    status: "operational",
-    lastUpdate: "2024-01-28T12:00:00",
+    id: 'tr-001',
+    name: 'Transformator T1',
+    type: 'transformer',
+    status: 'operational',
+    lastUpdate: '2024-01-28T12:00:00',
     metrics: {
       load: 75,
       temperature: 42,
@@ -40,11 +40,11 @@ const mockDevices: Device[] = [
     },
   },
   {
-    id: "mt-001",
-    name: "Licznik L1",
-    type: "meter",
-    status: "warning",
-    lastUpdate: "2024-01-28T12:00:00",
+    id: 'mt-001',
+    name: 'Licznik L1',
+    type: 'meter',
+    status: 'warning',
+    lastUpdate: '2024-01-28T12:00:00',
     metrics: {
       load: 85,
       temperature: 38,
@@ -52,11 +52,11 @@ const mockDevices: Device[] = [
     },
   },
   {
-    id: "sn-001",
-    name: "Czujnik C1",
-    type: "sensor",
-    status: "error",
-    lastUpdate: "2024-01-28T12:00:00",
+    id: 'sn-001',
+    name: 'Czujnik C1',
+    type: 'sensor',
+    status: 'error',
+    lastUpdate: '2024-01-28T12:00:00',
     metrics: {
       load: 0,
       temperature: 55,
@@ -65,35 +65,35 @@ const mockDevices: Device[] = [
   },
 ];
 
-const getDeviceIcon = (type: Device["type"]) => {
+const getDeviceIcon = (type: Device['type']) => {
   switch (type) {
-    case "transformer":
+    case 'transformer':
       return <CircuitBoard className="w-5 h-5" />;
-    case "meter":
+    case 'meter':
       return <Gauge className="w-5 h-5" />;
-    case "sensor":
+    case 'sensor':
       return <Signal className="w-5 h-5" />;
   }
 };
 
-const getStatusColor = (status: Device["status"]) => {
+const getStatusColor = (status: Device['status']) => {
   switch (status) {
-    case "operational":
-      return "bg-green-500/10 text-green-500";
-    case "warning":
-      return "bg-yellow-500/10 text-yellow-500";
-    case "error":
-      return "bg-red-500/10 text-red-500";
+    case 'operational':
+      return 'bg-green-500/10 text-green-500';
+    case 'warning':
+      return 'bg-yellow-500/10 text-yellow-500';
+    case 'error':
+      return 'bg-red-500/10 text-red-500';
   }
 };
 
-const getStatusIcon = (status: Device["status"]) => {
+const getStatusIcon = (status: Device['status']) => {
   switch (status) {
-    case "operational":
+    case 'operational':
       return <CheckCircle className="w-4 h-4" />;
-    case "warning":
+    case 'warning':
       return <AlertTriangle className="w-4 h-4" />;
-    case "error":
+    case 'error':
       return <XCircle className="w-4 h-4" />;
   }
 };
@@ -138,10 +138,7 @@ export function DeviceStatus() {
                   {getDeviceIcon(device.type)}
                   <h3 className="font-semibold">{device.name}</h3>
                 </div>
-                <Badge
-                  variant="secondary"
-                  className={`${getStatusColor(device.status)} gap-1`}
-                >
+                <Badge variant="secondary" className={`${getStatusColor(device.status)} gap-1`}>
                   {getStatusIcon(device.status)}
                   <span className="capitalize">{device.status}</span>
                 </Badge>
@@ -149,9 +146,7 @@ export function DeviceStatus() {
 
               <div className="space-y-4">
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">
-                    Obciążenie
-                  </div>
+                  <div className="text-sm text-muted-foreground mb-1">Obciążenie</div>
                   <div className="flex items-center gap-2">
                     <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
                       <div
@@ -159,25 +154,17 @@ export function DeviceStatus() {
                         style={{ width: `${device.metrics.load}%` }}
                       />
                     </div>
-                    <span className="text-sm font-medium">
-                      {device.metrics.load}%
-                    </span>
+                    <span className="text-sm font-medium">{device.metrics.load}%</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">
-                      Temperatura
-                    </div>
-                    <div className="font-medium">
-                      {device.metrics.temperature}°C
-                    </div>
+                    <div className="text-sm text-muted-foreground mb-1">Temperatura</div>
+                    <div className="font-medium">{device.metrics.temperature}°C</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">
-                      Wydajność
-                    </div>
+                    <div className="text-sm text-muted-foreground mb-1">Wydajność</div>
                     <div className="font-medium">{device.metrics.efficiency}%</div>
                   </div>
                 </div>

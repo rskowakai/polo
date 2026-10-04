@@ -1,13 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Battery, Cloud, Factory, Flame, Atom, Droplet, Wind, Sun } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import { Atom, Battery, Cloud, Droplet, Factory, Flame, Sun, Wind } from 'lucide-react';
+import {
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const COLORS = {
-  nuclear: "#7C3AED",
-  renewable: "#10B981",
-  fossil: "#EF4444",
-  import: "#F59E0B",
+  nuclear: '#7C3AED',
+  renewable: '#10B981',
+  fossil: '#EF4444',
+  import: '#F59E0B',
 };
 
 interface EnergySource {
@@ -19,19 +30,19 @@ interface EnergySource {
 
 export function FranceEnergyCard() {
   const productionData: EnergySource[] = [
-    { name: "Nuclear", value: 49351, icon: Atom, color: COLORS.nuclear },
-    { name: "Hydro", value: 9084, icon: Droplet, color: COLORS.renewable },
-    { name: "Wind", value: 1157, icon: Wind, color: COLORS.renewable },
-    { name: "Solar", value: 0, icon: Sun, color: COLORS.renewable },
-    { name: "Gas", value: 3904, icon: Flame, color: COLORS.fossil },
-    { name: "Coal", value: 0, icon: Factory, color: COLORS.fossil },
-    { name: "Biomass", value: 893, icon: Factory, color: COLORS.renewable },
-    { name: "Battery", value: 5, icon: Battery, color: COLORS.renewable },
+    { name: 'Nuclear', value: 49351, icon: Atom, color: COLORS.nuclear },
+    { name: 'Hydro', value: 9084, icon: Droplet, color: COLORS.renewable },
+    { name: 'Wind', value: 1157, icon: Wind, color: COLORS.renewable },
+    { name: 'Solar', value: 0, icon: Sun, color: COLORS.renewable },
+    { name: 'Gas', value: 3904, icon: Flame, color: COLORS.fossil },
+    { name: 'Coal', value: 0, icon: Factory, color: COLORS.fossil },
+    { name: 'Biomass', value: 893, icon: Factory, color: COLORS.renewable },
+    { name: 'Battery', value: 5, icon: Battery, color: COLORS.renewable },
   ];
 
   const importExportData = [
-    { name: "Import", value: 1476, color: COLORS.import },
-    { name: "Export", value: 7221, color: COLORS.nuclear },
+    { name: 'Import', value: 1476, color: COLORS.import },
+    { name: 'Export', value: 7221, color: COLORS.nuclear },
   ];
 
   return (
@@ -46,7 +57,7 @@ export function FranceEnergyCard() {
             <span>France Energy Data</span>
             <div className="text-sm font-normal">
               <span className="text-green-500">93% Fossil-Free</span>
-              {" | "}
+              {' | '}
               <span className="text-emerald-500">19% Renewable</span>
             </div>
           </CardTitle>
@@ -81,9 +92,7 @@ export function FranceEnergyCard() {
                               <data.icon className="h-4 w-4" />
                               <span className="font-medium">{data.name}</span>
                             </div>
-                            <div className="text-sm">
-                              {data.value.toLocaleString()} MW
-                            </div>
+                            <div className="text-sm">{data.value.toLocaleString()} MW</div>
                           </div>
                         );
                       }
@@ -103,12 +112,7 @@ export function FranceEnergyCard() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                  />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

@@ -3,7 +3,10 @@ interface ForecastSummaryProps {
   consumptionForecast: any;
 }
 
-export const ForecastSummary = ({ productionForecast, consumptionForecast }: ForecastSummaryProps) => {
+export const ForecastSummary = ({
+  productionForecast,
+  consumptionForecast,
+}: ForecastSummaryProps) => {
   return (
     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div className="p-4 rounded-lg border bg-card">

@@ -1,14 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
-import { 
-  Home,
-  Lightbulb,
-  Thermometer,
-  Blinds,
-  AirVent,
-  WashingMachine,
-} from "lucide-react";
+import { motion } from 'framer-motion';
+import { AirVent, Blinds, Home, Lightbulb, Thermometer, WashingMachine } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { toast } from '@/components/ui/use-toast';
 
 interface SmartHomeFeature {
   icon: React.ElementType;
@@ -20,35 +13,35 @@ export const SmartHomeFunctionalities = () => {
   const features: SmartHomeFeature[] = [
     {
       icon: Lightbulb,
-      name: "Zarządzanie oświetleniem",
-      description: "Scenariusze oświetleniowe, automatyczne sterowanie światłami",
+      name: 'Zarządzanie oświetleniem',
+      description: 'Scenariusze oświetleniowe, automatyczne sterowanie światłami',
     },
     {
       icon: Thermometer,
-      name: "Kontrola temperatury",
-      description: "Regulacja temperatury w pomieszczeniach, harmonogramy",
+      name: 'Kontrola temperatury',
+      description: 'Regulacja temperatury w pomieszczeniach, harmonogramy',
     },
     {
       icon: Blinds,
-      name: "Zarządzanie roletami",
-      description: "Automatyczne sterowanie roletami",
+      name: 'Zarządzanie roletami',
+      description: 'Automatyczne sterowanie roletami',
     },
     {
       icon: AirVent,
-      name: "Monitoring jakości powietrza",
-      description: "Pomiar i wyświetlanie jakości powietrza",
+      name: 'Monitoring jakości powietrza',
+      description: 'Pomiar i wyświetlanie jakości powietrza',
     },
     {
       icon: WashingMachine,
-      name: "Kontrola urządzeń AGD",
-      description: "Zdalne sterowanie sprzętem AGD",
+      name: 'Kontrola urządzeń AGD',
+      description: 'Zdalne sterowanie sprzętem AGD',
     },
   ];
 
   const handleFeatureClick = () => {
     toast({
-      title: "Informacja",
-      description: "Funkcja w przygotowaniu",
+      title: 'Informacja',
+      description: 'Funkcja w przygotowaniu',
     });
   };
 
@@ -66,7 +59,7 @@ export const SmartHomeFunctionalities = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <Card 
+            <Card
               className="p-6 cursor-pointer hover:shadow-lg transition-all"
               onClick={handleFeatureClick}
             >
@@ -74,9 +67,7 @@ export const SmartHomeFunctionalities = () => {
                 <feature.icon className="h-6 w-6 text-primary" />
                 <div>
                   <h3 className="font-semibold">{feature.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </div>
             </Card>

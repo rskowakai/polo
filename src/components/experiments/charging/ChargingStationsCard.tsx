@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { Loader2, MapPin, Zap, Info, Battery, Clock } from "lucide-react";
+import { useQuery } from '@tanstack/react-query';
+import { Battery, Clock, Info, Loader2, MapPin, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ChargingStationsMap } from "./ChargingStationsMap";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/components/ui/use-toast';
+import { ChargingStationsMap } from './ChargingStationsMap';
 
 interface ChargingStation {
   ID: number;
@@ -53,35 +54,36 @@ const API_KEY = 'e44d4c3e-9f3c-4e1d-ad15-5efc0e7f7ac0';
 export const ChargingStationsCard = () => {
   const { toast } = useToast();
   const [selectedStation, setSelectedStation] = useState<ChargingStation | null>(null);
-  const [minPower, setMinPower] = useState<string>("0");
+  const [minPower, setMinPower] = useState<string>('0');
   const [operationalOnly, setOperationalOnly] = useState<boolean>(true);
 
-  const { data: stations, isLoading, error } = useQuery({
+  const {
+    data: stations,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['charging-stations', minPower, operationalOnly],
     queryFn: async () => {
       console.log('Fetching charging stations with params:', { minPower, operationalOnly });
-      
+
       const params = new URLSearchParams({
         key: API_KEY,
         countrycode: 'PL',
         maxresults: '100',
         compact: 'false',
         verbose: 'false',
-        levelid: minPower === "50" ? "3" : minPower === "22" ? "2" : "1",
+        levelid: minPower === '50' ? '3' : minPower === '22' ? '2' : '1',
       });
 
       if (operationalOnly) {
         params.append('statustypeid', '50'); // 50 is the ID for "Operational" status
       }
 
-      const response = await fetch(
-        `https://api.openchargemap.io/v3/poi?${params.toString()}`,
-        {
-          headers: {
-            'Accept': 'application/json'
-          }
-        }
-      );
+      const response = await fetch(`https://api.openchargemap.io/v3/poi?${params.toString()}`, {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch charging stations');
@@ -94,7 +96,7 @@ export const ChargingStationsCard = () => {
   const handleStationClick = (station: ChargingStation) => {
     setSelectedStation(station);
     toast({
-      title: "Station Selected",
+      title: 'Station Selected',
       description: `${station.AddressInfo.Title} - ${station.AddressInfo.AddressLine1}`,
     });
   };
@@ -115,10 +117,10 @@ export const ChargingStationsCard = () => {
             </SelectContent>
           </Select>
           <Button
-            variant={operationalOnly ? "default" : "outline"}
+            variant={operationalOnly ? 'default' : 'outline'}
             onClick={() => setOperationalOnly(!operationalOnly)}
           >
-            {operationalOnly ? "Showing Operational Only" : "Showing All Stations"}
+            {operationalOnly ? 'Showing Operational Only' : 'Showing All Stations'}
           </Button>
         </div>
       </CardHeader>
@@ -134,7 +136,7 @@ export const ChargingStationsCard = () => {
                 <TooltipProvider key={station.ID}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Card 
+                      <Card
                         className="cursor-pointer transition-all hover:shadow-lg"
                         onClick={() => handleStationClick(station)}
                       >
@@ -163,7 +165,7 @@ export const ChargingStationsCard = () => {
                               </Tooltip>
                             )}
                           </div>
-                          
+
                           <div className="mt-4 space-y-2">
                             {station.Connections.map((conn, idx) => (
                               <div key={idx} className="flex items-center gap-2">
@@ -175,7 +177,7 @@ export const ChargingStationsCard = () => {
                                 </span>
                               </div>
                             ))}
-                            
+
                             {station.NumberOfPoints && (
                               <div className="flex items-center gap-2">
                                 <Battery className="h-4 w-4 text-green-500" />
@@ -184,7 +186,7 @@ export const ChargingStationsCard = () => {
                                 </span>
                               </div>
                             )}
-                            
+
                             {station.UsageCost && (
                               <div className="flex items-center gap-2">
                                 <Clock className="h-4 w-4 text-blue-500" />
@@ -214,7 +216,7 @@ export const ChargingStationsCard = () => {
                 </TooltipProvider>
               ))}
             </div>
-            
+
             <ChargingStationsMap stations={stations} />
           </>
         ) : null}

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bot, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Chatbot } from './Chatbot';
 import { Button } from './ui/button';
-import { Bot, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { useLocation } from 'react-router-dom';
 
 export function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +35,7 @@ export function FloatingChatbot() {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -44,13 +44,9 @@ export function FloatingChatbot() {
               className="rounded-full p-4 shadow-lg flex items-center gap-2 bg-primary hover:bg-primary/90 transition-colors duration-200"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Bot className="h-6 w-6" />
-              )}
+              {isOpen ? <X className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
               <span className="text-sm font-medium hidden md:inline">
-                {isOpen ? "Zamknij" : "Asystent AI"}
+                {isOpen ? 'Zamknij' : 'Asystent AI'}
               </span>
             </Button>
           </TooltipTrigger>

@@ -1,13 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
-import { 
-  Settings,
-  Bell,
-  Mic,
-  BarChart,
-  Plus,
-} from "lucide-react";
+import { motion } from 'framer-motion';
+import { BarChart, Bell, Mic, Plus, Settings } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { toast } from '@/components/ui/use-toast';
 
 interface AdditionalFeature {
   icon: React.ElementType;
@@ -19,30 +13,30 @@ export const AdditionalFunctionalities = () => {
   const features: AdditionalFeature[] = [
     {
       icon: Settings,
-      name: "Scenariusze",
-      description: "Tworzenie złożonych scenariuszy automatyzacji",
+      name: 'Scenariusze',
+      description: 'Tworzenie złożonych scenariuszy automatyzacji',
     },
     {
       icon: Bell,
-      name: "Powiadomienia",
-      description: "Powiadomienia o zdarzeniach w domu",
+      name: 'Powiadomienia',
+      description: 'Powiadomienia o zdarzeniach w domu',
     },
     {
       icon: Mic,
-      name: "Głosowe sterowanie",
-      description: "Sterowanie funkcjami za pomocą komend głosowych",
+      name: 'Głosowe sterowanie',
+      description: 'Sterowanie funkcjami za pomocą komend głosowych',
     },
     {
       icon: BarChart,
-      name: "Analityka danych",
-      description: "Analiza danych użytkowania systemu",
+      name: 'Analityka danych',
+      description: 'Analiza danych użytkowania systemu',
     },
   ];
 
   const handleFeatureClick = () => {
     toast({
-      title: "Informacja",
-      description: "Funkcja w przygotowaniu",
+      title: 'Informacja',
+      description: 'Funkcja w przygotowaniu',
     });
   };
 
@@ -60,7 +54,7 @@ export const AdditionalFunctionalities = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <Card 
+            <Card
               className="p-6 cursor-pointer hover:shadow-lg transition-all"
               onClick={handleFeatureClick}
             >
@@ -68,9 +62,7 @@ export const AdditionalFunctionalities = () => {
                 <feature.icon className="h-6 w-6 text-primary" />
                 <div>
                   <h3 className="font-semibold">{feature.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </div>
             </Card>

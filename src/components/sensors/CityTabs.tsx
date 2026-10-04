@@ -1,6 +1,6 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { motion } from 'framer-motion';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface CityTabsProps {
   cities: string[];
@@ -14,9 +14,9 @@ export const CityTabs = ({ cities, selectedCity, onCitySelect }: CityTabsProps) 
       <Tabs value={selectedCity} onValueChange={onCitySelect} className="w-full">
         <TabsList className="inline-flex min-w-full lg:w-full p-1">
           {cities.map((city) => (
-            <TabsTrigger 
-              key={city} 
-              value={city.toLowerCase()} 
+            <TabsTrigger
+              key={city}
+              value={city.toLowerCase()}
               className="relative flex-1 px-3 py-1.5 text-sm whitespace-nowrap"
             >
               {city}

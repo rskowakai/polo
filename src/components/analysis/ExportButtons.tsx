@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ExportButtonsProps {
   onExport: (format: 'pdf' | 'jpg' | 'xlsx' | 'csv') => void;
@@ -12,44 +12,44 @@ export function ExportButtons({ onExport, onGenerateForecast, showForecast }: Ex
 
   return (
     <div className="flex gap-2 items-center flex-wrap">
-      <Button 
+      <Button
         variant="outline"
         className="bg-secondary hover:bg-primary/40 text-primary-foreground"
         onClick={() => onExport('pdf')}
       >
         Eksportuj do PDF
       </Button>
-      <Button 
+      <Button
         variant="outline"
         className="bg-secondary hover:bg-primary/40 text-primary-foreground"
         onClick={() => onExport('xlsx')}
       >
         Eksportuj do Excel
       </Button>
-      <Button 
+      <Button
         variant="outline"
         className="bg-secondary hover:bg-primary/40 text-primary-foreground"
         onClick={() => onExport('jpg')}
       >
         Eksportuj do JPG
       </Button>
-      <Button 
+      <Button
         variant="outline"
         className="bg-secondary hover:bg-primary/40 text-primary-foreground"
         onClick={() => onExport('csv')}
       >
         Eksportuj do CSV
       </Button>
-      <Button 
+      <Button
         variant="outline"
         className="bg-secondary hover:bg-primary/40 text-primary-foreground"
         onClick={() => {
           onGenerateForecast();
           toast({
-            title: "Prognoza wygenerowana",
-            description: "Wyświetlono przewidywane wartości na podstawie danych historycznych",
+            title: 'Prognoza wygenerowana',
+            description: 'Wyświetlono przewidywane wartości na podstawie danych historycznych',
           });
-        }} 
+        }}
         disabled={showForecast}
       >
         Generuj prognozę

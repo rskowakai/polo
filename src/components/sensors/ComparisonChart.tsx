@@ -1,14 +1,14 @@
-import { Card } from "@/components/ui/card";
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
+import { Card } from '@/components/ui/card';
 
 interface ChartData {
   timestamp: string;
@@ -46,27 +46,23 @@ export const ComparisonChart = ({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={combinedData}>
             <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-            <XAxis
-              dataKey="timestamp"
-              tick={{ fontSize: 12 }}
-              tickMargin={10}
-            />
+            <XAxis dataKey="timestamp" tick={{ fontSize: 12 }} tickMargin={10} />
             <YAxis
               tick={{ fontSize: 12 }}
               tickMargin={10}
               label={{
                 value: unit,
                 angle: -90,
-                position: "insideLeft",
-                style: { textAnchor: "middle" },
+                position: 'insideLeft',
+                style: { textAnchor: 'middle' },
               }}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                border: "none",
-                borderRadius: "4px",
-                color: "white",
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                border: 'none',
+                borderRadius: '4px',
+                color: 'white',
               }}
             />
             <Legend />

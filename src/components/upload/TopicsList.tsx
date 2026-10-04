@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
-import { List } from "lucide-react";
+import { List } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
 interface TopicsListProps {
   topics: string[];

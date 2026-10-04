@@ -1,35 +1,35 @@
-import { Card } from "@/components/ui/card";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { BarChart2, LineChart as LineChartIcon, RefreshCw, ZoomIn } from 'lucide-react';
+import { useRef, useState } from 'react';
 import {
-  LineChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ComposedChart,
+  Label,
+  Legend,
   Line,
+  LineChart,
+  ReferenceArea,
+  ResponsiveContainer,
+  Scatter,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  ReferenceArea,
-  Label,
-  BarChart,
-  Bar,
-  ComposedChart,
-  Scatter,
-} from "recharts";
-import { useCompanyStore } from "@/components/CompanySidebar";
-import { companiesData } from "@/data/companies";
-import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { RefreshCw, ZoomIn, BarChart2, LineChart as LineChartIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+} from 'recharts';
+import { useCompanyStore } from '@/components/CompanySidebar';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+} from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
+import { companiesData } from '@/data/companies';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -49,13 +49,10 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
       <p className="font-medium mb-2">{`Time: ${label}`}</p>
       {payload.map((entry, index) => (
         <div key={index} className="flex items-center gap-2 text-sm">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: entry.color }}
-          />
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
           <span className="text-muted-foreground">{entry.name}:</span>
           <span className="font-medium">
-            {entry.value} {entry.name === "Efficiency" ? "%" : "MW"}
+            {entry.value} {entry.name === 'Efficiency' ? '%' : 'MW'}
           </span>
         </div>
       ))}
@@ -66,9 +63,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 export function EnergyChart() {
   const { toast } = useToast();
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
   const [zoomLeft, setZoomLeft] = useState<string | null>(null);
   const [zoomRight, setZoomRight] = useState<string | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -99,38 +94,38 @@ export function EnergyChart() {
 
     try {
       const canvas = await html2canvas(chartRef.current);
-      
+
       if (format === 'pdf') {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF();
         const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        
+
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save('chart-export.pdf');
-        
+
         toast({
-          title: "Wykres wyeksportowany",
-          description: "Plik PDF został pobrany",
+          title: 'Wykres wyeksportowany',
+          description: 'Plik PDF został pobrany',
         });
       } else {
         const link = document.createElement('a');
         link.download = 'chart-export.jpg';
         link.href = canvas.toDataURL('image/jpeg');
         link.click();
-        
+
         toast({
-          title: "Wykres wyeksportowany",
-          description: "Plik JPG został pobrany",
+          title: 'Wykres wyeksportowany',
+          description: 'Plik JPG został pobrany',
         });
       }
     } catch (error) {
       console.error('Export failed:', error);
       toast({
-        title: "Błąd eksportu",
-        description: "Nie udało się wyeksportować wykresu",
-        variant: "destructive",
+        title: 'Błąd eksportu',
+        description: 'Nie udało się wyeksportować wykresu',
+        variant: 'destructive',
       });
     }
   };
@@ -141,16 +136,16 @@ export function EnergyChart() {
       margin: { top: 20, right: 30, left: 20, bottom: 80 },
       onMouseDown: (e: any) => e?.activeLabel && setZoomLeft(e.activeLabel),
       onMouseMove: (e: any) => isZoomed && e?.activeLabel && setZoomRight(e.activeLabel),
-      onMouseUp: () => handleZoom({ left: zoomLeft || '', right: zoomRight || '' })
+      onMouseUp: () => handleZoom({ left: zoomLeft || '', right: zoomRight || '' }),
     };
 
     const commonAxes = (
       <>
         <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-        <XAxis 
-          dataKey="name" 
+        <XAxis
+          dataKey="name"
           height={80}
-          tick={{ fontSize: 12 }} 
+          tick={{ fontSize: 12 }}
           tickMargin={30}
           angle={-45}
           textAnchor="end"
@@ -159,31 +154,36 @@ export function EnergyChart() {
           scale="band"
           xAxisId={0}
         >
-          <Label value="Czas" position="bottom" offset={50} className="text-sm fill-muted-foreground" />
+          <Label
+            value="Czas"
+            position="bottom"
+            offset={50}
+            className="text-sm fill-muted-foreground"
+          />
         </XAxis>
-        <YAxis 
-          tick={{ fontSize: 12 }} 
+        <YAxis
+          tick={{ fontSize: 12 }}
           tickMargin={10}
           width={80}
           allowDataOverflow={true}
           scale="auto"
           yAxisId={0}
         >
-          <Label 
-            value="Wartość (MW / %)" 
-            angle={-90} 
-            position="left" 
+          <Label
+            value="Wartość (MW / %)"
+            angle={-90}
+            position="left"
             offset={0}
             className="text-sm fill-muted-foreground"
           />
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
-        <Legend 
-          verticalAlign="bottom" 
+        <Legend
+          verticalAlign="bottom"
           height={36}
           wrapperStyle={{
-            paddingTop: "20px",
-            borderTop: "1px solid var(--border)",
+            paddingTop: '20px',
+            borderTop: '1px solid var(--border)',
           }}
         />
       </>
@@ -256,9 +256,7 @@ export function EnergyChart() {
     <Card className="col-span-4 p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h3 className="text-lg font-semibold mb-1">
-            Zużycie energii - {selectedCompany?.name}
-          </h3>
+          <h3 className="text-lg font-semibold mb-1">Zużycie energii - {selectedCompany?.name}</h3>
           <p className="text-sm text-muted-foreground">
             Monitorowanie zużycia, produkcji i wydajności w czasie rzeczywistym
           </p>
@@ -298,25 +296,15 @@ export function EnergyChart() {
               Reset zoom
             </Button>
           )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleExport('pdf')}
-            className="gap-2"
-          >
+          <Button variant="outline" size="sm" onClick={() => handleExport('pdf')} className="gap-2">
             Eksportuj PDF
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleExport('jpg')}
-            className="gap-2"
-          >
+          <Button variant="outline" size="sm" onClick={() => handleExport('jpg')} className="gap-2">
             Eksportuj JPG
           </Button>
         </div>
       </div>
-      
+
       <div ref={chartRef} className="h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           {renderChart()}

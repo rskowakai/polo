@@ -29,8 +29,8 @@ export const generateGeminiResponse = async (prompt: string, context?: string): 
     const data = await response.json();
     return data.reply || data.text || '';
   } catch (error) {
-    console.error("Błąd podczas komunikacji z serwerem Gemini:", error);
-    return "Przepraszam, wystąpił problem podczas przetwarzania zapytania przez asystenta AI. Upewnij się, że serwer backendowy jest aktywny.";
+    console.error('Błąd podczas komunikacji z serwerem Gemini:', error);
+    return 'Przepraszam, wystąpił problem podczas przetwarzania zapytania przez asystenta AI. Upewnij się, że serwer backendowy jest aktywny.';
   }
 };
 

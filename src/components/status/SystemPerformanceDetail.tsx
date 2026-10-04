@@ -1,9 +1,17 @@
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Cpu, Database, Network } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { Cpu, Database, Network } from 'lucide-react';
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/components/ui/use-toast';
 
 const mockHistoricalData = Array.from({ length: 24 }, (_, i) => ({
   time: `${i}:00`,
@@ -17,7 +25,7 @@ export const SystemPerformanceDetail = () => {
 
   const handleExport = (format: 'pdf' | 'csv') => {
     toast({
-      title: "Export initiated",
+      title: 'Export initiated',
       description: `Exporting data as ${format.toUpperCase()}...`,
     });
     // Implement actual export logic here
@@ -42,25 +50,25 @@ export const SystemPerformanceDetail = () => {
               <XAxis dataKey="time" />
               <YAxis />
               <Tooltip />
-              <Line 
-                type="monotone" 
-                dataKey="cpuUsage" 
-                name="CPU Usage" 
-                stroke="#ef4444" 
+              <Line
+                type="monotone"
+                dataKey="cpuUsage"
+                name="CPU Usage"
+                stroke="#ef4444"
                 strokeWidth={2}
               />
-              <Line 
-                type="monotone" 
-                dataKey="memoryUsage" 
-                name="Memory Usage" 
-                stroke="#34d399" 
+              <Line
+                type="monotone"
+                dataKey="memoryUsage"
+                name="Memory Usage"
+                stroke="#34d399"
                 strokeWidth={2}
               />
-              <Line 
-                type="monotone" 
-                dataKey="networkLatency" 
-                name="Network Latency" 
-                stroke="#60a5fa" 
+              <Line
+                type="monotone"
+                dataKey="networkLatency"
+                name="Network Latency"
+                stroke="#60a5fa"
                 strokeWidth={2}
               />
             </LineChart>
@@ -70,9 +78,9 @@ export const SystemPerformanceDetail = () => {
 
       <div className="grid md:grid-cols-3 gap-6">
         {[
-          { icon: Cpu, label: "CPU Usage", value: 45 },
-          { icon: Database, label: "Memory Usage", value: 60 },
-          { icon: Network, label: "Network Latency", value: 25 }
+          { icon: Cpu, label: 'CPU Usage', value: 45 },
+          { icon: Database, label: 'Memory Usage', value: 60 },
+          { icon: Network, label: 'Network Latency', value: 25 },
         ].map((item, index) => (
           <Card key={index} className="p-6">
             <div className="flex items-center gap-2 mb-4">

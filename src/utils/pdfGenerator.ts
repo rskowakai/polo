@@ -7,23 +7,23 @@ export const generatePDF = (company: Company | undefined) => {
 
   // Create PDF with support for Polish characters
   const doc = new jsPDF();
-  
+
   // Add font that supports Polish characters
-  doc.setFont("helvetica");
-  
+  doc.setFont('helvetica');
+
   // Add title
   doc.setFontSize(20);
   doc.text(`Raport - ${company.name}`, 20, 20);
-  
+
   // Add energy data table
   doc.setFontSize(16);
   doc.text('Dane energetyczne', 20, 40);
-  
-  const energyTableData = company.energyData.map(data => [
+
+  const energyTableData = company.energyData.map((data) => [
     data.name,
     data.consumption.toString(),
     data.production.toString(),
-    data.efficiency.toString()
+    data.efficiency.toString(),
   ]);
 
   autoTable(doc, {
@@ -32,14 +32,14 @@ export const generatePDF = (company: Company | undefined) => {
     startY: 45,
     styles: {
       font: 'helvetica',
-      fontStyle: 'normal'
+      fontStyle: 'normal',
     },
     headStyles: {
       fillColor: [41, 128, 185],
       textColor: 255,
       font: 'helvetica',
-      fontStyle: 'bold'
-    }
+      fontStyle: 'bold',
+    },
   });
 
   // Add statistics
@@ -47,10 +47,7 @@ export const generatePDF = (company: Company | undefined) => {
   doc.setFontSize(16);
   doc.text('Statystyki', 20, currentY);
 
-  const statsData = company.stats.map(stat => [
-    stat.title,
-    `${stat.value}${stat.unit || ''}`
-  ]);
+  const statsData = company.stats.map((stat) => [stat.title, `${stat.value}${stat.unit || ''}`]);
 
   autoTable(doc, {
     head: [['Wskaźnik', 'Wartość']],
@@ -58,14 +55,14 @@ export const generatePDF = (company: Company | undefined) => {
     startY: currentY + 5,
     styles: {
       font: 'helvetica',
-      fontStyle: 'normal'
+      fontStyle: 'normal',
     },
     headStyles: {
       fillColor: [41, 128, 185],
       textColor: 255,
       font: 'helvetica',
-      fontStyle: 'bold'
-    }
+      fontStyle: 'bold',
+    },
   });
 
   // Save the PDF

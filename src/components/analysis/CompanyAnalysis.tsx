@@ -1,21 +1,35 @@
-import { FloatingChatbot } from "../FloatingChatbot";
-import { Card } from "@/components/ui/card";
-import { useCompanyStore } from "@/components/CompanySidebar";
-import { companiesData } from "@/data/companies";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,
-  Legend, Area, AreaChart, ComposedChart, Scatter,
-} from "recharts";
-import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useState } from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ComposedChart,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Scatter,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import * as XLSX from 'xlsx';
-import { UploadOptions } from "./UploadOptions";
-import { ExportButtons } from "./ExportButtons";
+import { useCompanyStore } from '@/components/CompanySidebar';
+import { Card } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
+import { companiesData } from '@/data/companies';
+import { FloatingChatbot } from '../FloatingChatbot';
+import { ExportButtons } from './ExportButtons';
+import { UploadOptions } from './UploadOptions';
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const calculateForecast = (data: any[]) => {
   const forecast = data.map((item, index) => ({
@@ -30,9 +44,7 @@ const calculateForecast = (data: any[]) => {
 export function CompanyAnalysis() {
   const { toast } = useToast();
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
   const [showForecast, setShowForecast] = useState(false);
 
   const handleExport = async (format: 'pdf' | 'jpg' | 'xlsx' | 'csv') => {
@@ -47,9 +59,9 @@ export function CompanyAnalysis() {
           useCORS: true,
           allowTaint: true,
           logging: false,
-          scale: 2
+          scale: 2,
         });
-        
+
         if (format === 'jpg') {
           const link = document.createElement('a');
           link.download = `company-analysis-${Date.now()}.jpg`;
@@ -61,12 +73,12 @@ export function CompanyAnalysis() {
           const imgData = canvas.toDataURL('image/png', 1.0);
           const pdf = new jsPDF({
             orientation: 'landscape',
-            unit: 'mm'
+            unit: 'mm',
           });
           const imgProps = pdf.getImageProperties(imgData);
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          
+
           pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
           pdf.save(`company-analysis-${Date.now()}.pdf`);
         }
@@ -74,8 +86,8 @@ export function CompanyAnalysis() {
         const data = selectedCompany?.energyData || [];
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Analysis Data");
-        
+        XLSX.utils.book_append_sheet(wb, ws, 'Analysis Data');
+
         if (format === 'csv') {
           XLSX.writeFile(wb, `company-analysis-${Date.now()}.csv`);
         } else {
@@ -84,15 +96,15 @@ export function CompanyAnalysis() {
       }
 
       toast({
-        title: "Export completed",
+        title: 'Export completed',
         description: `File exported as ${format.toUpperCase()}`,
       });
     } catch (error) {
       console.error('Export error:', error);
       toast({
-        title: "Export failed",
-        description: "An error occurred during export. Please try again.",
-        variant: "destructive",
+        title: 'Export failed',
+        description: 'An error occurred during export. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -101,10 +113,8 @@ export function CompanyAnalysis() {
     <div className="relative">
       <div className="grid gap-6" id="company-analysis">
         <div className="flex justify-between items-center flex-wrap gap-2">
-          <h2 className="text-2xl font-bold">
-            Analiza - {selectedCompany?.name}
-          </h2>
-          <ExportButtons 
+          <h2 className="text-2xl font-bold">Analiza - {selectedCompany?.name}</h2>
+          <ExportButtons
             onExport={handleExport}
             onGenerateForecast={() => setShowForecast(true)}
             showForecast={showForecast}
@@ -116,7 +126,16 @@ export function CompanyAnalysis() {
             <h3 className="text-lg font-semibold mb-4">Trendy zużycia energii</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+                <LineChart
+                  data={
+                    showForecast
+                      ? [
+                          ...(selectedCompany?.energyData || []),
+                          ...calculateForecast(selectedCompany?.energyData || []),
+                        ]
+                      : selectedCompany?.energyData
+                  }
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -145,7 +164,16 @@ export function CompanyAnalysis() {
             <h3 className="text-lg font-semibold mb-4">Analiza wydajności</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+                <AreaChart
+                  data={
+                    showForecast
+                      ? [
+                          ...(selectedCompany?.energyData || []),
+                          ...calculateForecast(selectedCompany?.energyData || []),
+                        ]
+                      : selectedCompany?.energyData
+                  }
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -170,10 +198,10 @@ export function CompanyAnalysis() {
                 <PieChart>
                   <Pie
                     data={[
-                      { name: "Energia słoneczna", value: 30 },
-                      { name: "Energia wiatrowa", value: 25 },
-                      { name: "Biomasa", value: 20 },
-                      { name: "Inne źródła", value: 25 },
+                      { name: 'Energia słoneczna', value: 30 },
+                      { name: 'Energia wiatrowa', value: 25 },
+                      { name: 'Biomasa', value: 20 },
+                      { name: 'Inne źródła', value: 25 },
                     ]}
                     cx="50%"
                     cy="50%"
@@ -183,15 +211,12 @@ export function CompanyAnalysis() {
                     label
                   >
                     {[
-                      { name: "Energia słoneczna", value: 30 },
-                      { name: "Energia wiatrowa", value: 25 },
-                      { name: "Biomasa", value: 20 },
-                      { name: "Inne źródła", value: 25 },
+                      { name: 'Energia słoneczna', value: 30 },
+                      { name: 'Energia wiatrowa', value: 25 },
+                      { name: 'Biomasa', value: 20 },
+                      { name: 'Inne źródła', value: 25 },
                     ].map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -205,7 +230,16 @@ export function CompanyAnalysis() {
             <h3 className="text-lg font-semibold mb-4">Analiza korelacji</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={showForecast ? [...(selectedCompany?.energyData || []), ...calculateForecast(selectedCompany?.energyData || [])] : selectedCompany?.energyData}>
+                <ComposedChart
+                  data={
+                    showForecast
+                      ? [
+                          ...(selectedCompany?.energyData || []),
+                          ...calculateForecast(selectedCompany?.energyData || []),
+                        ]
+                      : selectedCompany?.energyData
+                  }
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />

@@ -9,8 +9,8 @@ export interface PowerProductionBreakdown {
   gas: number;
   oil: number;
   unknown: number | null;
-  "hydro discharge": number;
-  "battery discharge": number;
+  'hydro discharge': number;
+  'battery discharge': number;
 }
 
 export interface PowerData {

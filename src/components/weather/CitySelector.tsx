@@ -1,8 +1,14 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface CitySelectorProps {
-  cities: { id: string; name: string; lat: number; lon: number; }[];
+  cities: { id: string; name: string; lat: number; lon: number }[];
   selectedCity: string;
   onCitySelect: (cityId: string) => void;
 }
@@ -14,7 +20,7 @@ export const CitySelector = ({ cities, selectedCity, onCitySelect }: CitySelecto
     <div className="w-full max-w-xs mb-4">
       <Select value={selectedCity} onValueChange={onCitySelect}>
         <SelectTrigger>
-          <SelectValue placeholder={t("selectCity")} />
+          <SelectValue placeholder={t('selectCity')} />
         </SelectTrigger>
         <SelectContent>
           {cities.map((city) => (

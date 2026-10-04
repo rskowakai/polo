@@ -1,19 +1,36 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Battery, Cloud, Factory, Flame, Atom, Droplet, Wind, Sun } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
-import { motion } from "framer-motion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { EUROPEAN_COUNTRIES, fetchPowerData } from "@/utils/electricityMaps";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { Atom, Battery, Cloud, Droplet, Factory, Flame, Sun, Wind } from 'lucide-react';
+import { useState } from 'react';
+import {
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
+import { EUROPEAN_COUNTRIES, fetchPowerData } from '@/utils/electricityMaps';
 
 const COLORS = {
-  nuclear: "#7C3AED",
-  renewable: "#10B981",
-  fossil: "#EF4444",
-  import: "#F59E0B",
+  nuclear: '#7C3AED',
+  renewable: '#10B981',
+  fossil: '#EF4444',
+  import: '#F59E0B',
 };
 
 interface EnergySource {
@@ -27,19 +44,24 @@ export function EnergyCard() {
   const [selectedCountry, setSelectedCountry] = useState(EUROPEAN_COUNTRIES[0]);
   const { toast } = useToast();
 
-  const { data: powerData, isLoading, error, refetch } = useQuery({
+  const {
+    data: powerData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['power-data', selectedCountry.id],
     queryFn: () => fetchPowerData(selectedCountry.lat, selectedCountry.lon),
     refetchInterval: 300000, // Refresh every 5 minutes
   });
 
   const handleApiKeySet = () => {
-    const apiKey = prompt("Please enter your Electricity Maps API key:");
+    const apiKey = prompt('Please enter your Electricity Maps API key:');
     if (apiKey) {
       localStorage.setItem('ELECTRICITY_MAPS_API_KEY', apiKey);
       toast({
-        title: "API Key Saved",
-        description: "Your API key has been saved. Refreshing data...",
+        title: 'API Key Saved',
+        description: 'Your API key has been saved. Refreshing data...',
       });
       refetch();
     }
@@ -63,7 +85,9 @@ export function EnergyCard() {
       <Card className="w-full">
         <CardContent className="pt-6">
           <div className="text-red-500">Error loading energy data. Please check your API key.</div>
-          <Button onClick={handleApiKeySet} className="mt-4">Update API Key</Button>
+          <Button onClick={handleApiKeySet} className="mt-4">
+            Update API Key
+          </Button>
         </CardContent>
       </Card>
     );
@@ -83,19 +107,59 @@ export function EnergyCard() {
   }
 
   const productionData: EnergySource[] = [
-    { name: "Nuclear", value: powerData.powerProductionBreakdown.nuclear || 0, icon: Atom, color: COLORS.nuclear },
-    { name: "Hydro", value: powerData.powerProductionBreakdown.hydro || 0, icon: Droplet, color: COLORS.renewable },
-    { name: "Wind", value: powerData.powerProductionBreakdown.wind || 0, icon: Wind, color: COLORS.renewable },
-    { name: "Solar", value: powerData.powerProductionBreakdown.solar || 0, icon: Sun, color: COLORS.renewable },
-    { name: "Gas", value: powerData.powerProductionBreakdown.gas || 0, icon: Flame, color: COLORS.fossil },
-    { name: "Coal", value: powerData.powerProductionBreakdown.coal || 0, icon: Factory, color: COLORS.fossil },
-    { name: "Biomass", value: powerData.powerProductionBreakdown.biomass || 0, icon: Factory, color: COLORS.renewable },
-    { name: "Battery", value: powerData.powerProductionBreakdown["battery discharge"] || 0, icon: Battery, color: COLORS.renewable },
+    {
+      name: 'Nuclear',
+      value: powerData.powerProductionBreakdown.nuclear || 0,
+      icon: Atom,
+      color: COLORS.nuclear,
+    },
+    {
+      name: 'Hydro',
+      value: powerData.powerProductionBreakdown.hydro || 0,
+      icon: Droplet,
+      color: COLORS.renewable,
+    },
+    {
+      name: 'Wind',
+      value: powerData.powerProductionBreakdown.wind || 0,
+      icon: Wind,
+      color: COLORS.renewable,
+    },
+    {
+      name: 'Solar',
+      value: powerData.powerProductionBreakdown.solar || 0,
+      icon: Sun,
+      color: COLORS.renewable,
+    },
+    {
+      name: 'Gas',
+      value: powerData.powerProductionBreakdown.gas || 0,
+      icon: Flame,
+      color: COLORS.fossil,
+    },
+    {
+      name: 'Coal',
+      value: powerData.powerProductionBreakdown.coal || 0,
+      icon: Factory,
+      color: COLORS.fossil,
+    },
+    {
+      name: 'Biomass',
+      value: powerData.powerProductionBreakdown.biomass || 0,
+      icon: Factory,
+      color: COLORS.renewable,
+    },
+    {
+      name: 'Battery',
+      value: powerData.powerProductionBreakdown['battery discharge'] || 0,
+      icon: Battery,
+      color: COLORS.renewable,
+    },
   ];
 
   const importExportData = [
-    { name: "Import", value: powerData.powerImportTotal, color: COLORS.import },
-    { name: "Export", value: powerData.powerExportTotal, color: COLORS.nuclear },
+    { name: 'Import', value: powerData.powerImportTotal, color: COLORS.import },
+    { name: 'Export', value: powerData.powerExportTotal, color: COLORS.nuclear },
   ];
 
   return (
@@ -110,7 +174,7 @@ export function EnergyCard() {
             <Select
               value={selectedCountry.id}
               onValueChange={(value) => {
-                const country = EUROPEAN_COUNTRIES.find(c => c.id === value);
+                const country = EUROPEAN_COUNTRIES.find((c) => c.id === value);
                 if (country) setSelectedCountry(country);
               }}
             >
@@ -127,7 +191,7 @@ export function EnergyCard() {
             </Select>
             <div className="text-sm font-normal">
               <span className="text-green-500">{powerData.fossilFreePercentage}% Fossil-Free</span>
-              {" | "}
+              {' | '}
               <span className="text-emerald-500">{powerData.renewablePercentage}% Renewable</span>
             </div>
           </div>
@@ -162,9 +226,7 @@ export function EnergyCard() {
                               <data.icon className="h-4 w-4" />
                               <span className="font-medium">{data.name}</span>
                             </div>
-                            <div className="text-sm">
-                              {data.value.toLocaleString()} MW
-                            </div>
+                            <div className="text-sm">{data.value.toLocaleString()} MW</div>
                           </div>
                         );
                       }
@@ -184,12 +246,7 @@ export function EnergyCard() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                  />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

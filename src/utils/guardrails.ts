@@ -8,7 +8,8 @@ const PESEL_REGEX = /\b\d{11}\b/g;
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 const PHONE_REGEX = /(?:\+?48[\s-]?)?(?:\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{3}|\b\d{9}\b)/g;
 const CARD_REGEX = /\b(?:\d[ -]*?){13,19}\b/g;
-const IBAN_REGEX = /\b[A-Z]{2}\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}\b|\bPL\d{26}\b/gi;
+const IBAN_REGEX =
+  /\b[A-Z]{2}\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}\b|\bPL\d{26}\b/gi;
 
 /**
  * Redacts PII from text

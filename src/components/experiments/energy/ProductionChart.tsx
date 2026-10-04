@@ -1,5 +1,5 @@
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { PowerProductionBreakdown } from '@/types/electricity';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import type { PowerProductionBreakdown } from '@/types/electricity';
 import { COLORS } from './constants';
 
 interface ProductionChartProps {
@@ -11,7 +11,7 @@ export const ProductionChart = ({ data }: ProductionChartProps) => {
     .filter(([_, value]) => value > 0)
     .map(([key, value]) => ({
       name: key,
-      value: value
+      value: value,
     }));
 
   return (

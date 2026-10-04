@@ -1,21 +1,14 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { useCompanyStore } from "@/components/CompanySidebar";
-import { companiesData } from "@/data/companies";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Tooltip
-} from "recharts";
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useCompanyStore } from '@/components/CompanySidebar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/components/ui/use-toast';
+import { companiesData } from '@/data/companies';
 
 const StatCard = ({ stat, index, expandedCard, setExpandedCard }) => {
   const isExpanded = expandedCard === index;
@@ -25,21 +18,21 @@ const StatCard = ({ stat, index, expandedCard, setExpandedCard }) => {
   };
 
   const getStatusColor = (value: string | number) => {
-    if (typeof value === "string") return "bg-green-500";
-    if (value > 80) return "bg-green-500";
-    if (value > 50) return "bg-yellow-500";
-    return "bg-red-500";
+    if (typeof value === 'string') return 'bg-green-500';
+    if (value > 80) return 'bg-green-500';
+    if (value > 50) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
   const getProgressValue = (value: string | number) => {
-    if (typeof value === "string") return 100;
+    if (typeof value === 'string') return 100;
     return value;
   };
 
   // Generate mock trend data
   const trendData = Array.from({ length: 7 }, (_, i) => ({
     name: `Day ${i + 1}`,
-    value: typeof stat.value === "string" ? 100 : Number(stat.value) + Math.random() * 20 - 10
+    value: typeof stat.value === 'string' ? 100 : Number(stat.value) + Math.random() * 20 - 10,
   }));
 
   return (
@@ -66,43 +59,34 @@ const StatCard = ({ stat, index, expandedCard, setExpandedCard }) => {
             )}
           </div>
         </div>
-        
+
         <div className="mt-4">
           <div className="flex items-baseline gap-1 mb-2">
             <span className="text-2xl font-bold">{stat.value}</span>
-            {stat.unit && (
-              <span className="text-sm text-muted-foreground">
-                {stat.unit}
-              </span>
-            )}
+            {stat.unit && <span className="text-sm text-muted-foreground">{stat.unit}</span>}
           </div>
-          <Progress 
-            value={getProgressValue(stat.value)} 
-            className="h-2"
-          />
+          <Progress value={getProgressValue(stat.value)} className="h-2" />
           <div className="h-[50px] mt-2">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#8884d8" 
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#8884d8"
                   dot={false}
                   strokeWidth={2}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            {stat.description}
-          </p>
+          <p className="text-xs text-muted-foreground mt-2">{stat.description}</p>
         </div>
 
         <AnimatePresence>
           {isExpanded && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+              animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
               className="mt-4 pt-4 border-t space-y-4"
@@ -113,23 +97,13 @@ const StatCard = ({ stat, index, expandedCard, setExpandedCard }) => {
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#8884d8"
-                      strokeWidth={2}
-                    />
+                    <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
               {stat.details.map((detail) => (
-                <div
-                  key={detail.label}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span className="text-muted-foreground">
-                    {detail.label}
-                  </span>
+                <div key={detail.label} className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{detail.label}</span>
                   <span className="font-medium">{detail.value}</span>
                 </div>
               ))}
@@ -144,9 +118,7 @@ const StatCard = ({ stat, index, expandedCard, setExpandedCard }) => {
 export const PowerStats = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
 
   return (
     <>

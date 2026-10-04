@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { BatteryCharging, Eye, Power, RotateCcw, Sun, Zap } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Zap, Sun, BatteryCharging, Power, Eye } from 'lucide-react';
 
 interface DigitalTwinCanvasProps {
   solarKw?: number;
@@ -349,7 +350,9 @@ export const DigitalTwinCanvas: React.FC<DigitalTwinCanvasProps> = ({
               netExport >= 0 ? 'text-emerald-400' : 'text-amber-400'
             }`}
           >
-            {netExport >= 0 ? `+${netExport.toFixed(2)} kW (Eksport)` : `${netExport.toFixed(2)} kW (Import)`}
+            {netExport >= 0
+              ? `+${netExport.toFixed(2)} kW (Eksport)`
+              : `${netExport.toFixed(2)} kW (Import)`}
           </span>
         </div>
       </div>

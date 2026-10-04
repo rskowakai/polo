@@ -28,13 +28,13 @@ export interface Wind {
 }
 
 export interface Rain {
-  "1h"?: number;
-  "3h"?: number;
+  '1h'?: number;
+  '3h'?: number;
 }
 
 export interface Snow {
-  "1h"?: number;
-  "3h"?: number;
+  '1h'?: number;
+  '3h'?: number;
 }
 
 export interface SystemInfo {
@@ -71,8 +71,8 @@ export interface ForecastItem {
   wind: Wind;
   visibility: number;
   pop: number;
-  rain?: { "3h": number };
-  snow?: { "3h": number };
+  rain?: { '3h': number };
+  snow?: { '3h': number };
   sys: { pod: string };
   dt_txt: string;
 }
@@ -115,7 +115,7 @@ export interface AirQualityData {
 }
 
 export interface WeatherSettings {
-  units: "metric" | "imperial";
+  units: 'metric' | 'imperial';
   displayOptions: {
     details: boolean;
     forecast: boolean;

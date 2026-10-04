@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents an authenticated user profile in Smart Grid",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 512 },
+        "role": { "type": "string", "enum": ["admin", "operator", "guest"], "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "Scanned document, technical schema or telemetry file",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "fileName": { "type": "string", "maxLength": 256 },
+        "fileType": { "type": "string", "maxLength": 64 },
+        "fileSize": { "type": "number" },
+        "extractedText": { "type": "string", "maxLength": 500000 },
+        "summary": { "type": "string", "maxLength": 2048 },
+        "category": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "fileName", "extractedText"]
+    },
+    "AICreation": {
+      "title": "AICreation",
+      "description": "Media created or edited with Gemini/Veo (images, videos, transcripts, search)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["image", "video", "transcript", "search", "maps", "chat"], "maxLength": 32 },
+        "prompt": { "type": "string", "maxLength": 2048 },
+        "mediaUrl": { "type": "string", "maxLength": 1000000 },
+        "textContent": { "type": "string", "maxLength": 100000 },
+        "modelUsed": { "type": "string", "maxLength": 64 },
+        "aspectRatio": { "type": "string", "maxLength": 16 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "type", "prompt"]
+    },
+    "BacklogItem": {
+      "title": "BacklogItem",
+      "description": "Smart grid backlog task item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "status": { "type": "string", "enum": ["todo", "in_progress", "done"], "maxLength": 32 },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"], "maxLength": 32 },
+        "hours": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles and credentials"
+    },
+    "/documents/{documentId}": {
+      "schema": { "$ref": "#/entities/Document" },
+      "description": "Scanned technical documents and OCR results"
+    },
+    "/ai_creations/{creationId}": {
+      "schema": { "$ref": "#/entities/AICreation" },
+      "description": "User generated AI assets (images, videos, audio transcripts)"
+    },
+    "/backlog/{itemId}": {
+      "schema": { "$ref": "#/entities/BacklogItem" },
+      "description": "Tasks and features roadmap"
+    }
+  }
+}

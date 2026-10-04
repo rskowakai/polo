@@ -1,27 +1,25 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { de } from './translations/de';
 import { en } from './translations/en';
 import { pl } from './translations/pl';
-import { de } from './translations/de';
-import { uk } from './translations/uk';
 import { ru } from './translations/ru';
+import { uk } from './translations/uk';
 
 const resources = {
   en,
   pl,
   de,
   uk,
-  ru
+  ru,
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: localStorage.getItem('language') || 'pl',
-    interpolation: {
-      escapeValue: false
-    }
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: localStorage.getItem('language') || 'pl',
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;

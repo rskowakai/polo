@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 interface AlertThreshold {
   parameter: string;
@@ -14,22 +14,20 @@ export const AlertsConfig = () => {
   const [thresholds, setThresholds] = useState<AlertThreshold[]>([
     { parameter: 'PM2.5', threshold: 25 },
     { parameter: 'PM10', threshold: 50 },
-    { parameter: 'CO₂', threshold: 1000 }
+    { parameter: 'CO₂', threshold: 1000 },
   ]);
 
   const handleThresholdChange = (parameter: string, value: string) => {
-    setThresholds(prev =>
-      prev.map(t =>
-        t.parameter === parameter ? { ...t, threshold: Number(value) } : t
-      )
+    setThresholds((prev) =>
+      prev.map((t) => (t.parameter === parameter ? { ...t, threshold: Number(value) } : t))
     );
   };
 
   const saveThresholds = () => {
     // In a real application, this would save to backend
     toast({
-      title: "Zapisano progi alertów",
-      description: "Nowe wartości zostały zapisane pomyślnie."
+      title: 'Zapisano progi alertów',
+      description: 'Nowe wartości zostały zapisane pomyślnie.',
     });
   };
 

@@ -1,35 +1,34 @@
-import { useState } from "react";
-import { SensorCard } from "./SensorCard";
-import { CityTabs } from "./CityTabs";
-import { sensorsData } from "./SensorsData";
-import { Input } from "@/components/ui/input";
-import { AlertsConfig } from "./AlertsConfig";
-import { DataComparison } from "./DataComparison";
-import { ExportData } from "./ExportData";
-import { Search, Battery, Signal, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { useTranslation } from "react-i18next";
+import { Battery, Clock, Search, Signal } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { AlertsConfig } from './AlertsConfig';
+import { CityTabs } from './CityTabs';
+import { DataComparison } from './DataComparison';
+import { ExportData } from './ExportData';
+import { SensorCard } from './SensorCard';
+import { sensorsData } from './SensorsData';
 
 const SensorsPanel = () => {
-  const [selectedCity, setSelectedCity] = useState<string>("gdansk");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCity, setSelectedCity] = useState<string>('gdansk');
+  const [searchQuery, setSearchQuery] = useState('');
   const { t } = useTranslation();
-  
-  const cities = Object.keys(sensorsData).map(key => 
-    key.charAt(0).toUpperCase() + key.slice(1)
-  );
-  
+
+  const cities = Object.keys(sensorsData).map((key) => key.charAt(0).toUpperCase() + key.slice(1));
+
   const currentCityData = sensorsData[selectedCity];
 
   const handleCitySelect = (city: string) => {
     setSelectedCity(city.toLowerCase());
   };
 
-  const filteredSensors = currentCityData.sensors.filter(sensor =>
-    sensor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    sensor.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredSensors = currentCityData.sensors.filter(
+    (sensor) =>
+      sensor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sensor.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleExport = async (format: 'jpg' | 'pdf' | 'xlsx' | 'csv') => {
@@ -39,7 +38,7 @@ const SensorsPanel = () => {
 
       switch (format) {
         case 'jpg':
-        case 'pdf':
+        case 'pdf': {
           const canvas = await html2canvas(element);
           if (format === 'jpg') {
             const link = document.createElement('a');
@@ -56,10 +55,11 @@ const SensorsPanel = () => {
             pdf.save('czujniki.pdf');
           }
           break;
+        }
         // ... keep existing code (xlsx and csv export logic)
       }
     } catch (error) {
-      console.error("Błąd eksportu:", error);
+      console.error('Błąd eksportu:', error);
     }
   };
 
@@ -123,18 +123,14 @@ const SensorsPanel = () => {
         </div>
 
         <div className="mb-6">
-          <CityTabs
-            cities={cities}
-            selectedCity={selectedCity}
-            onCitySelect={handleCitySelect}
-          />
+          <CityTabs cities={cities} selectedCity={selectedCity} onCitySelect={handleCitySelect} />
         </div>
 
         {currentCityData && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredSensors.map((sensor, index) => (
-                <SensorCard 
+                <SensorCard
                   key={index}
                   icon={sensor.icon}
                   name={sensor.name}
@@ -149,13 +145,17 @@ const SensorsPanel = () => {
             <div className="mt-8 space-y-8">
               <AlertsConfig />
               <DataComparison />
-              
+
               <div className="bg-card rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold mb-4">Dane dla miasta {currentCityData.name}</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Dane dla miasta {currentCityData.name}
+                </h3>
                 <div className="prose dark:prose-invert max-w-none">
                   <p className="text-muted-foreground">
-                    Poniżej znajdują się szczegółowe informacje o jakości powietrza i warunkach środowiskowych w mieście {currentCityData.name}. 
-                    Wszystkie pomiary są aktualizowane w czasie rzeczywistym, zapewniając dokładny obraz stanu środowiska.
+                    Poniżej znajdują się szczegółowe informacje o jakości powietrza i warunkach
+                    środowiskowych w mieście {currentCityData.name}. Wszystkie pomiary są
+                    aktualizowane w czasie rzeczywistym, zapewniając dokładny obraz stanu
+                    środowiska.
                   </p>
                   <div className="mt-4 grid gap-2">
                     {currentCityData.sensors.map((sensor, index) => (

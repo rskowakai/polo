@@ -11,7 +11,7 @@ export const CitySelector = ({ cities, selectedCity, onCitySelect }: CitySelecto
         key={city}
         onClick={() => onCitySelect(city.toLowerCase())}
         className={`text-xl font-semibold hover:text-primary transition-colors ${
-          selectedCity === city.toLowerCase() ? "text-primary" : ""
+          selectedCity === city.toLowerCase() ? 'text-primary' : ''
         }`}
       >
         {city}

@@ -1,5 +1,11 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { EUROPEAN_COUNTRIES } from "../constants";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { EUROPEAN_COUNTRIES } from '../constants';
 
 interface HeaderProps {
   powerData: any;
@@ -13,7 +19,7 @@ export const Header = ({ powerData, selectedCountry, onCountrySelect }: HeaderPr
       <Select
         value={selectedCountry.id}
         onValueChange={(value) => {
-          const country = EUROPEAN_COUNTRIES.find(c => c.id === value);
+          const country = EUROPEAN_COUNTRIES.find((c) => c.id === value);
           if (country) onCountrySelect(value);
         }}
       >
@@ -31,7 +37,7 @@ export const Header = ({ powerData, selectedCountry, onCountrySelect }: HeaderPr
       {powerData && (
         <div className="text-sm font-normal">
           <span className="text-green-500">{powerData.fossilFreePercentage}% Fossil-Free</span>
-          {" | "}
+          {' | '}
           <span className="text-emerald-500">{powerData.renewablePercentage}% Renewable</span>
         </div>
       )}

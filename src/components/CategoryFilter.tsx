@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 const categories = [
-  { id: "all", label: "All" },
-  { id: "framework", label: "Frameworks" },
-  { id: "library", label: "Libraries" },
-  { id: "software", label: "Software" },
+  { id: 'all', label: 'All' },
+  { id: 'framework', label: 'Frameworks' },
+  { id: 'library', label: 'Libraries' },
+  { id: 'software', label: 'Software' },
 ];
 
 interface CategoryFilterProps {
@@ -22,8 +22,8 @@ export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
           onClick={() => onChange(category.id)}
           className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
             selected === category.id
-              ? "bg-emerald-500 text-white"
-              : "text-gray-600 hover:bg-gray-100"
+              ? 'bg-emerald-500 text-white'
+              : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
           {category.label}

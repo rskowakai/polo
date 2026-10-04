@@ -1,4 +1,4 @@
-import { Sun, Cloud, CloudRain, CloudSnow, CloudLightning, CloudFog, Wind } from "lucide-react";
+import { Cloud, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun, Wind } from 'lucide-react';
 
 export const getWeatherIcon = (weatherMain: string) => {
   switch (weatherMain.toLowerCase()) {

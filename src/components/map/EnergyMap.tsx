@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import React, { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { useCompanyStore } from '@/components/CompanySidebar';
 import { companiesData } from '@/data/companies';
@@ -8,9 +8,7 @@ const EnergyMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -20,17 +18,17 @@ const EnergyMap = () => {
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap contributors',
     }).addTo(map.current);
 
     // Add markers for Tricity cities
     const cities = [
       { name: 'Gdańsk', coords: [54.372158, 18.638306] },
       { name: 'Sopot', coords: [54.441581, 18.560096] },
-      { name: 'Gdynia', coords: [54.518889, 18.531883] }
+      { name: 'Gdynia', coords: [54.518889, 18.531883] },
     ];
 
-    cities.forEach(city => {
+    cities.forEach((city) => {
       if (!map.current) return;
       L.marker(city.coords as L.LatLngExpression)
         .bindPopup(city.name)
@@ -40,7 +38,7 @@ const EnergyMap = () => {
     // Add markers for energy consumption points
     selectedCompany?.energyData.forEach((data) => {
       if (!map.current) return;
-      
+
       // Generate random positions around Tricity area
       const lat = 54.372158 + (Math.random() - 0.5) * 0.2;
       const lng = 18.638306 + (Math.random() - 0.5) * 0.2;

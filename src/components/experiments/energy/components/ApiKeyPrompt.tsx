@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { CardContent } from '@/components/ui/card';
 
 interface ApiKeyPromptProps {
   onSetApiKey: () => void;

@@ -1,36 +1,36 @@
-import { Card } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
-import { Upload, Cloud, Files, Database } from "lucide-react";
+import { Cloud, Database, Files, Upload } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
 
 export function UploadOptions() {
   const { toast } = useToast();
 
   const handleOptionClick = (optionName: string) => {
     toast({
-      title: "Funkcja w przygotowaniu",
+      title: 'Funkcja w przygotowaniu',
       description: `Opcja: ${optionName}`,
     });
   };
 
   const options = [
     {
-      title: "Wgrywanie zbiorcze",
-      description: "Jednoczesne wgrywanie wielu plików poprzez przeciągnięcie całego folderu",
+      title: 'Wgrywanie zbiorcze',
+      description: 'Jednoczesne wgrywanie wielu plików poprzez przeciągnięcie całego folderu',
       icon: Files,
     },
     {
-      title: "Wgrywanie w tle",
-      description: "Kontynuuj pracę w aplikacji podczas wgrywania plików",
+      title: 'Wgrywanie w tle',
+      description: 'Kontynuuj pracę w aplikacji podczas wgrywania plików',
       icon: Upload,
     },
     {
-      title: "Wgrywanie dużych plików",
-      description: "Obsługa plików o większym rozmiarze z mechanizmem podziału",
+      title: 'Wgrywanie dużych plików',
+      description: 'Obsługa plików o większym rozmiarze z mechanizmem podziału',
       icon: Database,
     },
     {
-      title: "Wgrywanie z chmury",
-      description: "Wgrywaj pliki z Google Drive, Dropbox i innych źródeł",
+      title: 'Wgrywanie z chmury',
+      description: 'Wgrywaj pliki z Google Drive, Dropbox i innych źródeł',
       icon: Cloud,
     },
   ];

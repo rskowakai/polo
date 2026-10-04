@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 export function ApiKeySettings() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('ELEVENLABS_API_KEY') || '');
@@ -19,9 +19,9 @@ export function ApiKeySettings() {
     try {
       const response = await fetch('https://api.elevenlabs.io/v1/voices', {
         headers: {
-          'Accept': 'application/json',
-          'xi-api-key': key
-        }
+          Accept: 'application/json',
+          'xi-api-key': key,
+        },
       });
 
       return response.ok;
@@ -38,15 +38,16 @@ export function ApiKeySettings() {
     if (isValid) {
       localStorage.setItem('ELEVENLABS_API_KEY', apiKey);
       toast({
-        title: "Sukces",
-        description: "Klucz API został pomyślnie zapisany.",
+        title: 'Sukces',
+        description: 'Klucz API został pomyślnie zapisany.',
       });
       window.location.reload(); // Odśwież stronę, aby zastosować nowy klucz
     } else {
       toast({
-        variant: "destructive",
-        title: "Błąd",
-        description: "Podany klucz API jest nieprawidłowy. Sprawdź czy został poprawnie skopiowany.",
+        variant: 'destructive',
+        title: 'Błąd',
+        description:
+          'Podany klucz API jest nieprawidłowy. Sprawdź czy został poprawnie skopiowany.',
       });
     }
   };
@@ -70,7 +71,7 @@ export function ApiKeySettings() {
               onChange={(e) => setApiKey(e.target.value)}
             />
             <p className="text-sm text-muted-foreground">
-              Możesz znaleźć swój klucz API w{" "}
+              Możesz znaleźć swój klucz API w{' '}
               <a
                 href="https://elevenlabs.io/speech-synthesis"
                 target="_blank"
@@ -81,11 +82,8 @@ export function ApiKeySettings() {
               </a>
             </p>
           </div>
-          <Button 
-            onClick={handleSaveApiKey} 
-            disabled={isValidating}
-          >
-            {isValidating ? "Sprawdzanie..." : "Zapisz klucz API"}
+          <Button onClick={handleSaveApiKey} disabled={isValidating}>
+            {isValidating ? 'Sprawdzanie...' : 'Zapisz klucz API'}
           </Button>
         </div>
       </DialogContent>

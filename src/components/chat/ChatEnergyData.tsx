@@ -1,37 +1,35 @@
-import { Card } from "@/components/ui/card";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { useCompanyStore } from "@/components/CompanySidebar";
-import { companiesData } from "@/data/companies";
+} from 'recharts';
+import { useCompanyStore } from '@/components/CompanySidebar';
+import { Card } from '@/components/ui/card';
+import { companiesData } from '@/data/companies';
 
 interface ChatEnergyDataProps {
-  dataType: "consumption" | "production" | "efficiency";
+  dataType: 'consumption' | 'production' | 'efficiency';
   title: string;
 }
 
 export function ChatEnergyData({ dataType, title }: ChatEnergyDataProps) {
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
 
   const getDataColor = () => {
     switch (dataType) {
-      case "consumption":
-        return "#ef4444";
-      case "production":
-        return "#34d399";
-      case "efficiency":
-        return "#60a5fa";
+      case 'consumption':
+        return '#ef4444';
+      case 'production':
+        return '#34d399';
+      case 'efficiency':
+        return '#60a5fa';
       default:
-        return "#60a5fa";
+        return '#60a5fa';
     }
   };
 

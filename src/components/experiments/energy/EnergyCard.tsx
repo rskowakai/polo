@@ -1,38 +1,42 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button"; // Added this import
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { EUROPEAN_COUNTRIES } from "./constants";
-import { ProductionChart } from "./ProductionChart";
-import { ForecastChart } from "./ForecastChart";
-import { fetchPowerData, fetchPowerForecast, fetchConsumptionForecast } from "@/utils/electricityApi";
-import { Header } from "./components/Header";
-import { LoadingState } from "./components/LoadingState";
-import { ForecastSummary } from "./components/ForecastSummary";
-import { ApiKeyPrompt } from "./components/ApiKeyPrompt";
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button'; // Added this import
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
+import {
+  fetchConsumptionForecast,
+  fetchPowerData,
+  fetchPowerForecast,
+} from '@/utils/electricityApi';
+import { ApiKeyPrompt } from './components/ApiKeyPrompt';
+import { ForecastSummary } from './components/ForecastSummary';
+import { Header } from './components/Header';
+import { LoadingState } from './components/LoadingState';
+import { EUROPEAN_COUNTRIES } from './constants';
+import { ForecastChart } from './ForecastChart';
+import { ProductionChart } from './ProductionChart';
 
 export function EnergyCard() {
   const [selectedCountry, setSelectedCountry] = useState(EUROPEAN_COUNTRIES[0]);
   const { toast } = useToast();
 
   const handleApiKeySet = () => {
-    const apiKey = prompt("Please enter your Electricity Maps API key:");
+    const apiKey = prompt('Please enter your Electricity Maps API key:');
     if (apiKey) {
       localStorage.setItem('ELECTRICITY_MAPS_API_KEY', apiKey);
       toast({
-        title: "API Key Saved",
-        description: "Your API key has been saved. Refreshing data...",
+        title: 'API Key Saved',
+        description: 'Your API key has been saved. Refreshing data...',
       });
       refetchAll();
     }
   };
 
-  const { 
-    data: powerData, 
-    isLoading: isPowerLoading, 
+  const {
+    data: powerData,
+    isLoading: isPowerLoading,
     error: powerError,
-    refetch: refetchPower 
+    refetch: refetchPower,
   } = useQuery({
     queryKey: ['power-data', selectedCountry.id],
     queryFn: () => fetchPowerData(selectedCountry.lat, selectedCountry.lon),
@@ -43,7 +47,7 @@ export function EnergyCard() {
     data: productionForecast,
     isLoading: isProductionLoading,
     error: productionError,
-    refetch: refetchProduction
+    refetch: refetchProduction,
   } = useQuery({
     queryKey: ['production-forecast', selectedCountry.id],
     queryFn: () => fetchPowerForecast(selectedCountry.id),
@@ -54,7 +58,7 @@ export function EnergyCard() {
     data: consumptionForecast,
     isLoading: isConsumptionLoading,
     error: consumptionError,
-    refetch: refetchConsumption
+    refetch: refetchConsumption,
   } = useQuery({
     queryKey: ['consumption-forecast', selectedCountry.id],
     queryFn: () => fetchConsumptionForecast(selectedCountry.lat, selectedCountry.lon),
@@ -83,7 +87,9 @@ export function EnergyCard() {
       <Card className="w-full">
         <CardContent className="pt-6">
           <div className="text-red-500">Error loading energy data. Please check your API key.</div>
-          <Button onClick={handleApiKeySet} className="mt-4">Update API Key</Button>
+          <Button onClick={handleApiKeySet} className="mt-4">
+            Update API Key
+          </Button>
         </CardContent>
       </Card>
     );
@@ -95,11 +101,11 @@ export function EnergyCard() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <Header 
+        <Header
           powerData={powerData}
           selectedCountry={selectedCountry}
           onCountrySelect={(value) => {
-            const country = EUROPEAN_COUNTRIES.find(c => c.id === value);
+            const country = EUROPEAN_COUNTRIES.find((c) => c.id === value);
             if (country) setSelectedCountry(country);
           }}
         />
@@ -118,11 +124,11 @@ export function EnergyCard() {
             {productionForecast && consumptionForecast && (
               <div>
                 <h3 className="text-lg font-semibold mb-4">Production vs Consumption Forecast</h3>
-                <ForecastChart 
+                <ForecastChart
                   productionForecast={productionForecast}
                   consumptionForecast={consumptionForecast}
                 />
-                <ForecastSummary 
+                <ForecastSummary
                   productionForecast={productionForecast}
                   consumptionForecast={consumptionForecast}
                 />

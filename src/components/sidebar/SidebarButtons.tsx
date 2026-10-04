@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Plus, Bot } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { Bot, Plus } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 interface SidebarButtonsProps {
   collapsed?: boolean;
@@ -18,9 +18,9 @@ export function SidebarButtons({ collapsed, handleAddCompany }: SidebarButtonsPr
   const handleOpenAssistant = () => {
     if (!isAIAssistantVisible) {
       toast({
-        title: "Asystent AI",
-        description: "Asystent AI jest dostępny tylko w sekcjach Analiza, Status i Czujniki.",
-        variant: "destructive"
+        title: 'Asystent AI',
+        description: 'Asystent AI jest dostępny tylko w sekcjach Analiza, Status i Czujniki.',
+        variant: 'destructive',
       });
       return;
     }
@@ -31,7 +31,7 @@ export function SidebarButtons({ collapsed, handleAddCompany }: SidebarButtonsPr
     <div className="space-y-2">
       <Button
         variant="outline"
-        className={`w-full justify-start ${collapsed ? "px-2" : ""}`}
+        className={`w-full justify-start ${collapsed ? 'px-2' : ''}`}
         onClick={handleAddCompany}
       >
         <Plus className="h-4 w-4 mr-2" />
@@ -39,7 +39,7 @@ export function SidebarButtons({ collapsed, handleAddCompany }: SidebarButtonsPr
       </Button>
       <Button
         variant="outline"
-        className={`w-full justify-start ${collapsed ? "px-2" : ""} ${!isAIAssistantVisible ? 'opacity-50' : ''}`}
+        className={`w-full justify-start ${collapsed ? 'px-2' : ''} ${!isAIAssistantVisible ? 'opacity-50' : ''}`}
         onClick={handleOpenAssistant}
       >
         <Bot className="h-4 w-4 mr-2" />

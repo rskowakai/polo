@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { BikeStationsMap } from "./BikeStationsMap";
-import { Bike, AlertTriangle } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { AlertTriangle, Bike } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination';
+import { useToast } from '@/components/ui/use-toast';
+import { BikeStationsMap } from './BikeStationsMap';
 
 interface Station {
   station_id: string;
@@ -35,9 +35,13 @@ export const BikeStationsCard = () => {
   useEffect(() => {
     const fetchStations = async () => {
       try {
-        const infoResponse = await fetch('https://gbfs.urbansharing.com/rowermevo.pl/station_information.json');
-        const statusResponse = await fetch('https://gbfs.urbansharing.com/rowermevo.pl/station_status.json');
-        
+        const infoResponse = await fetch(
+          'https://gbfs.urbansharing.com/rowermevo.pl/station_information.json'
+        );
+        const statusResponse = await fetch(
+          'https://gbfs.urbansharing.com/rowermevo.pl/station_status.json'
+        );
+
         const infoData = await infoResponse.json();
         const statusData = await statusResponse.json();
 
@@ -52,13 +56,13 @@ export const BikeStationsCard = () => {
         });
 
         setStations(combinedStations);
-        console.log("Fetched MEVO stations:", combinedStations);
+        console.log('Fetched MEVO stations:', combinedStations);
       } catch (error) {
-        console.error("Error fetching MEVO stations:", error);
+        console.error('Error fetching MEVO stations:', error);
         toast({
-          title: "Błąd",
-          description: "Nie udało się pobrać danych o stacjach MEVO",
-          variant: "destructive",
+          title: 'Błąd',
+          description: 'Nie udało się pobrać danych o stacjach MEVO',
+          variant: 'destructive',
         });
       } finally {
         setLoading(false);
@@ -81,11 +85,7 @@ export const BikeStationsCard = () => {
   const getPageNumbers = () => {
     const pages = [];
     for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= currentPage - 1 && i <= currentPage + 1)
-      ) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
         pages.push(i);
       } else if (i === currentPage - 2 || i === currentPage + 2) {
         pages.push('...');
@@ -131,7 +131,9 @@ export const BikeStationsCard = () => {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    className={
+                      currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                    }
                   />
                 </PaginationItem>
                 {getPageNumbers().map((pageNum, index) => (
@@ -152,7 +154,11 @@ export const BikeStationsCard = () => {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    className={
+                      currentPage === totalPages
+                        ? 'pointer-events-none opacity-50'
+                        : 'cursor-pointer'
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>

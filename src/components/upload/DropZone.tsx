@@ -1,6 +1,6 @@
-import { Upload } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface DropZoneProps {
   isDragging: boolean;
@@ -10,12 +10,12 @@ interface DropZoneProps {
   setIsDragging: (isDragging: boolean) => void;
 }
 
-export const DropZone = ({ 
-  isDragging, 
-  isProcessing, 
-  selectedFile, 
+export const DropZone = ({
+  isDragging,
+  isProcessing,
+  selectedFile,
   onFileSelect,
-  setIsDragging 
+  setIsDragging,
 }: DropZoneProps) => {
   const handleButtonClick = () => {
     document.getElementById('file-upload')?.click();
@@ -24,7 +24,7 @@ export const DropZone = ({
   return (
     <Card
       className={`p-8 border-2 border-dashed transition-colors ${
-        isDragging ? "border-primary bg-primary/10" : "border-border"
+        isDragging ? 'border-primary bg-primary/10' : 'border-border'
       }`}
       onDragOver={(e) => {
         e.preventDefault();
@@ -41,13 +41,13 @@ export const DropZone = ({
         <Upload className="w-12 h-12 text-muted-foreground" />
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            {isProcessing 
-              ? `Przetwarzanie pliku: ${selectedFile?.name}...` 
-              : "Przeciągnij i upuść pliki lub"}
+            {isProcessing
+              ? `Przetwarzanie pliku: ${selectedFile?.name}...`
+              : 'Przeciągnij i upuść pliki lub'}
           </p>
-          <Button 
-            variant="link" 
-            className="mt-1" 
+          <Button
+            variant="link"
+            className="mt-1"
             disabled={isProcessing}
             onClick={handleButtonClick}
           >

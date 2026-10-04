@@ -1,12 +1,20 @@
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Cpu, Signal, Network } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Cpu, Network, Signal } from 'lucide-react';
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import * as XLSX from 'xlsx';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/components/ui/use-toast';
 
 const mockHistoricalData = Array.from({ length: 24 }, (_, i) => ({
   time: `${i}:00`,
@@ -31,9 +39,15 @@ export const DeviceStatusDetail = () => {
         link.click();
       } else if (format === 'csv') {
         const csvContent = mockHistoricalData
-          .map(row => `${row.time},${row.activeDevices},${row.networkConnection},${row.signalQuality}`)
+          .map(
+            (row) =>
+              `${row.time},${row.activeDevices},${row.networkConnection},${row.signalQuality}`
+          )
           .join('\n');
-        const blob = new Blob([`Czas,Aktywne urządzenia,Połączenie sieciowe,Jakość sygnału\n${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob(
+          [`Czas,Aktywne urządzenia,Połączenie sieciowe,Jakość sygnału\n${csvContent}`],
+          { type: 'text/csv;charset=utf-8;' }
+        );
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'status-urzadzen.csv';
@@ -41,14 +55,14 @@ export const DeviceStatusDetail = () => {
       }
 
       toast({
-        title: "Eksport zakończony",
+        title: 'Eksport zakończony',
         description: `Plik został wyeksportowany w formacie ${format.toUpperCase()}`,
       });
     } catch (error) {
       toast({
-        title: "Błąd eksportu",
-        description: "Wystąpił błąd podczas eksportu pliku",
-        variant: "destructive",
+        title: 'Błąd eksportu',
+        description: 'Wystąpił błąd podczas eksportu pliku',
+        variant: 'destructive',
       });
     }
   };
@@ -72,25 +86,25 @@ export const DeviceStatusDetail = () => {
               <XAxis dataKey="time" />
               <YAxis />
               <Tooltip />
-              <Line 
-                type="monotone" 
-                dataKey="activeDevices" 
-                name="Aktywne urządzenia" 
-                stroke="#ef4444" 
+              <Line
+                type="monotone"
+                dataKey="activeDevices"
+                name="Aktywne urządzenia"
+                stroke="#ef4444"
                 strokeWidth={2}
               />
-              <Line 
-                type="monotone" 
-                dataKey="networkConnection" 
-                name="Połączenie sieciowe" 
-                stroke="#34d399" 
+              <Line
+                type="monotone"
+                dataKey="networkConnection"
+                name="Połączenie sieciowe"
+                stroke="#34d399"
                 strokeWidth={2}
               />
-              <Line 
-                type="monotone" 
-                dataKey="signalQuality" 
-                name="Jakość sygnału" 
-                stroke="#60a5fa" 
+              <Line
+                type="monotone"
+                dataKey="signalQuality"
+                name="Jakość sygnału"
+                stroke="#60a5fa"
                 strokeWidth={2}
               />
             </LineChart>
@@ -100,9 +114,9 @@ export const DeviceStatusDetail = () => {
 
       <div className="grid md:grid-cols-3 gap-6">
         {[
-          { icon: Cpu, label: "Aktywne urządzenia", value: 85 },
-          { icon: Network, label: "Połączenie sieciowe", value: 92 },
-          { icon: Signal, label: "Jakość sygnału", value: 78 }
+          { icon: Cpu, label: 'Aktywne urządzenia', value: 85 },
+          { icon: Network, label: 'Połączenie sieciowe', value: 92 },
+          { icon: Signal, label: 'Jakość sygnału', value: 78 },
         ].map((item, index) => (
           <Card key={index} className="p-6">
             <div className="flex items-center gap-2 mb-4">

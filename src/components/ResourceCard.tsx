@@ -1,5 +1,5 @@
-import { Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
 
 interface ResourceCardProps {
   title: string;
@@ -9,13 +9,7 @@ interface ResourceCardProps {
   url: string;
 }
 
-export const ResourceCard = ({
-  title,
-  description,
-  category,
-  stars,
-  url,
-}: ResourceCardProps) => {
+export const ResourceCard = ({ title, description, category, stars, url }: ResourceCardProps) => {
   return (
     <motion.a
       href={url}

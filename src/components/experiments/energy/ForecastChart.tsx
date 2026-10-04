@@ -1,5 +1,14 @@
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
-import { PowerForecast, ConsumptionForecast } from '@/types/electricity';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import type { ConsumptionForecast, PowerForecast } from '@/types/electricity';
 
 interface ForecastChartProps {
   productionForecast: PowerForecast;
@@ -13,7 +22,7 @@ export const ForecastChart = ({ productionForecast, consumptionForecast }: Forec
       time: new Date(prod.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       production: prod.powerProductionTotal,
       consumption: cons?.powerConsumptionTotal || 0,
-      difference: prod.powerProductionTotal - (cons?.powerConsumptionTotal || 0)
+      difference: prod.powerProductionTotal - (cons?.powerConsumptionTotal || 0),
     };
   });
 
@@ -25,7 +34,7 @@ export const ForecastChart = ({ productionForecast, consumptionForecast }: Forec
         <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
         <XAxis dataKey="time" />
         <YAxis />
-        <Tooltip 
+        <Tooltip
           content={({ active, payload, label }) => {
             if (active && payload && payload.length) {
               return (
@@ -47,24 +56,24 @@ export const ForecastChart = ({ productionForecast, consumptionForecast }: Forec
           }}
         />
         <Legend />
-        <Line 
-          type="monotone" 
-          dataKey="production" 
-          stroke="#22c55e" 
-          name="Production" 
+        <Line
+          type="monotone"
+          dataKey="production"
+          stroke="#22c55e"
+          name="Production"
           strokeWidth={2}
         />
-        <Line 
-          type="monotone" 
-          dataKey="consumption" 
-          stroke="#3b82f6" 
+        <Line
+          type="monotone"
+          dataKey="consumption"
+          stroke="#3b82f6"
           name="Consumption"
           strokeWidth={2}
         />
-        <Line 
-          type="monotone" 
-          dataKey="difference" 
-          stroke="#f97316" 
+        <Line
+          type="monotone"
+          dataKey="difference"
+          stroke="#f97316"
           name="Difference"
           strokeWidth={2}
           strokeDasharray="5 5"

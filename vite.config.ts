@@ -1,37 +1,32 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+import react from '@vitejs/plugin-react-swc';
+import { componentTagger } from 'lovable-tagger';
+import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 8080,
   },
   preview: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 8080,
   },
   worker: {
-    format: "es",
+    format: 'es',
     rollupOptions: {
       output: {
-        entryFileNames: "assets/worker-[name]-[hash].js",
-        chunkFileNames: "assets/worker-[name]-[hash].js",
-        assetFileNames: "assets/worker-[name]-[hash].[ext]",
+        entryFileNames: 'assets/worker-[name]-[hash].js',
+        chunkFileNames: 'assets/worker-[name]-[hash].js',
+        assetFileNames: 'assets/worker-[name]-[hash].[ext]',
       },
     },
   },
-  assetsInclude: ["**/*pdf.worker*.min.mjs", "**/*pdf.worker*.mjs"],
-  plugins: [
-    react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean),
+  plugins: [react(), mode === 'development' && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "pdfjs-dist/build/pdf.worker.min.mjs": path.resolve(__dirname, "./node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   build: {
     target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
@@ -54,10 +49,10 @@ export default defineConfig(({ mode }) => ({
       },
     },
     commonjsOptions: {
-      include: [/node_modules/]
-    }
+      include: [/node_modules/],
+    },
   },
   optimizeDeps: {
-    include: ['react-dropzone', 'pdfjs-dist/build/pdf.worker.min.mjs'],
-  }
+    include: ['react-dropzone'],
+  },
 }));

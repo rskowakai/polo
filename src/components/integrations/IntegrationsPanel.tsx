@@ -1,27 +1,28 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
-import { 
-  Home, 
-  Zap, 
-  Globe, 
-  Cloud, 
-  Bell, 
+import { motion } from 'framer-motion';
+import {
+  AlertCircle,
+  Bell,
+  CheckCircle,
+  Cloud,
   Droplet,
-  AlertCircle, 
-  CheckCircle, 
+  Globe,
+  Home,
   Loader2,
   MicIcon,
-  SmartphoneIcon 
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { IntegrationType, IntegrationConfig } from "@/types/integrations";
-import { SmartHomeFunctionalities } from "./SmartHomeFunctionalities";
-import { EnergyManagementFunctionalities } from "./EnergyManagementFunctionalities";
-import { AdditionalFunctionalities } from "./AdditionalFunctionalities";
+  SmartphoneIcon,
+  Zap,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
+import type { IntegrationConfig, IntegrationType } from '@/types/integrations';
+import { AdditionalFunctionalities } from './AdditionalFunctionalities';
+import { EnergyManagementFunctionalities } from './EnergyManagementFunctionalities';
+import { SmartHomeFunctionalities } from './SmartHomeFunctionalities';
+import { PomeranianOpenAPIs } from './PomeranianOpenAPIs';
 
 export const IntegrationsPanel = () => {
   const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType | null>(null);
@@ -32,80 +33,80 @@ export const IntegrationsPanel = () => {
 
   const integrations = [
     {
-      type: "smartHome" as const,
+      type: 'smartHome' as const,
       icon: Home,
-      name: "Smart Home",
-      description: "System zarządzania inteligentnym domem",
-      status: "connected",
+      name: 'Smart Home',
+      description: 'System zarządzania inteligentnym domem',
+      status: 'connected',
     },
     {
-      type: "energyManagement" as const,
+      type: 'energyManagement' as const,
       icon: Zap,
-      name: "Zarządzanie energią",
-      description: "Optymalizacja zużycia energii",
-      status: "warning",
+      name: 'Zarządzanie energią',
+      description: 'Optymalizacja zużycia energii',
+      status: 'warning',
     },
     {
-      type: "zapier" as const,
+      type: 'zapier' as const,
       icon: Globe,
-      name: "Zapier",
-      description: "Automatyzacja z innymi platformami",
-      status: "disconnected",
+      name: 'Zapier',
+      description: 'Automatyzacja z innymi platformami',
+      status: 'disconnected',
     },
     {
-      type: "googleHome" as const,
+      type: 'googleHome' as const,
       icon: MicIcon,
-      name: "Google Home",
-      description: "Sterowanie głosowe przez Google",
-      status: "disconnected",
+      name: 'Google Home',
+      description: 'Sterowanie głosowe przez Google',
+      status: 'disconnected',
     },
     {
-      type: "alexa" as const,
+      type: 'alexa' as const,
       icon: SmartphoneIcon,
-      name: "Amazon Alexa",
-      description: "Integracja z Alexa",
-      status: "disconnected",
+      name: 'Amazon Alexa',
+      description: 'Integracja z Alexa',
+      status: 'disconnected',
     },
     {
-      type: "cloudServices" as const,
+      type: 'cloudServices' as const,
       icon: Cloud,
-      name: "Usługi chmurowe",
-      description: "Integracja z AWS/Google Cloud/Azure",
-      status: "disconnected",
+      name: 'Usługi chmurowe',
+      description: 'Integracja z AWS/Google Cloud/Azure',
+      status: 'disconnected',
     },
     {
-      type: "alarmSystems" as const,
+      type: 'alarmSystems' as const,
       icon: Bell,
-      name: "Systemy alarmowe",
-      description: "Powiadomienia o zdarzeniach alarmowych",
-      status: "disconnected",
+      name: 'Systemy alarmowe',
+      description: 'Powiadomienia o zdarzeniach alarmowych',
+      status: 'disconnected',
     },
     {
-      type: "irrigation" as const,
+      type: 'irrigation' as const,
       icon: Droplet,
-      name: "System nawadniania",
-      description: "Automatyczne podlewanie",
-      status: "disconnected",
-    }
+      name: 'System nawadniania',
+      description: 'Automatyczne podlewanie',
+      status: 'disconnected',
+    },
   ];
 
   const handleConfigSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Symulacja wywołania API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       toast({
-        title: "Połączono pomyślnie",
+        title: 'Połączono pomyślnie',
         description: `Konfiguracja ${selectedIntegration} została zaktualizowana`,
       });
     } catch (error) {
       toast({
-        title: "Błąd",
+        title: 'Błąd',
         description: String(error),
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -114,37 +115,37 @@ export const IntegrationsPanel = () => {
 
   const getConfigFields = (type: IntegrationType) => {
     switch (type) {
-      case "smartHome":
-      case "zapier":
+      case 'smartHome':
+      case 'zapier':
         return (
           <Input
             placeholder="URL webhooka"
-            value={config.webhook || ""}
+            value={config.webhook || ''}
             onChange={(e) => setConfig({ ...config, webhook: e.target.value })}
           />
         );
-      case "googleHome":
-      case "alexa":
-      case "homeKit":
+      case 'googleHome':
+      case 'alexa':
+      case 'homeKit':
         return (
           <Input
             placeholder="ID urządzenia"
-            value={config.deviceId || ""}
+            value={config.deviceId || ''}
             onChange={(e) => setConfig({ ...config, deviceId: e.target.value })}
           />
         );
-      case "cloudServices":
+      case 'cloudServices':
         return (
           <>
             <Input
               placeholder="Klucz API"
-              value={config.apiKey || ""}
+              value={config.apiKey || ''}
               onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
               className="mb-2"
             />
             <Input
               placeholder="Endpoint"
-              value={config.endpoint || ""}
+              value={config.endpoint || ''}
               onChange={(e) => setConfig({ ...config, endpoint: e.target.value })}
             />
           </>
@@ -153,7 +154,7 @@ export const IntegrationsPanel = () => {
         return (
           <Input
             placeholder="URL webhooka"
-            value={config.webhook || ""}
+            value={config.webhook || ''}
             onChange={(e) => setConfig({ ...config, webhook: e.target.value })}
           />
         );
@@ -170,7 +171,7 @@ export const IntegrationsPanel = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card 
+            <Card
               className="p-6 cursor-pointer hover:shadow-lg transition-all"
               onClick={() => setSelectedIntegration(integration.type)}
             >
@@ -179,18 +180,16 @@ export const IntegrationsPanel = () => {
                   <integration.icon className="h-6 w-6 text-primary" />
                   <div>
                     <h3 className="font-semibold">{integration.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {integration.description}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{integration.description}</p>
                   </div>
                 </div>
-                {integration.status === "connected" && (
+                {integration.status === 'connected' && (
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 )}
-                {integration.status === "warning" && (
+                {integration.status === 'warning' && (
                   <AlertCircle className="h-5 w-5 text-yellow-500" />
                 )}
-                {integration.status === "disconnected" && (
+                {integration.status === 'disconnected' && (
                   <AlertCircle className="h-5 w-5 text-red-500" />
                 )}
               </div>
@@ -202,22 +201,16 @@ export const IntegrationsPanel = () => {
       {selectedIntegration && (
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">
-            Konfiguracja: {integrations.find(i => i.type === selectedIntegration)?.name}
+            Konfiguracja: {integrations.find((i) => i.type === selectedIntegration)?.name}
           </h3>
           <form onSubmit={handleConfigSubmit} className="space-y-4">
-            <div className="space-y-4">
-              {getConfigFields(selectedIntegration)}
-            </div>
+            <div className="space-y-4">{getConfigFields(selectedIntegration)}</div>
             <div className="flex gap-2">
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Zapisz
               </Button>
-              <Button 
-                type="button" 
-                variant="outline"
-                onClick={() => setSelectedIntegration(null)}
-              >
+              <Button type="button" variant="outline" onClick={() => setSelectedIntegration(null)}>
                 Anuluj
               </Button>
             </div>
@@ -225,6 +218,7 @@ export const IntegrationsPanel = () => {
         </Card>
       )}
 
+      <PomeranianOpenAPIs />
       <SmartHomeFunctionalities />
       <EnergyManagementFunctionalities />
       <AdditionalFunctionalities />

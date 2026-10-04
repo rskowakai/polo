@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common hardened helper primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'rskowak@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 1. Users collection
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.keys().hasOnly(['uid', 'email', 'displayName', 'photoURL', 'role', 'createdAt', 'updatedAt']) &&
+             data.uid is string && data.uid.size() <= 128 && data.uid == request.auth.uid &&
+             data.email is string && data.email.size() <= 128 &&
+             data.role is string && (data.role == 'admin' || data.role == 'operator' || data.role == 'guest');
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUser(incoming()) &&
+                       (incoming().role == 'guest' || incoming().role == 'operator' || request.auth.token.email == 'rskowak@gmail.com');
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidUser(incoming()) &&
+                       incoming().uid == existing().uid &&
+                       (isAdmin() || incoming().role == existing().role);
+      allow delete: if isAdmin();
+    }
+
+    // 2. Documents collection (Scanned docs & OCR)
+    function isValidDocument(data) {
+      return data.keys().hasAll(['id', 'userId', 'fileName', 'extractedText']) &&
+             data.keys().hasOnly(['id', 'userId', 'fileName', 'fileType', 'fileSize', 'extractedText', 'summary', 'category', 'createdAt', 'updatedAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.fileName is string && data.fileName.size() <= 256 &&
+             data.extractedText is string && data.extractedText.size() <= 500000;
+    }
+
+    match /documents/{documentId} {
+      allow get: if isSignedIn() && isValidId(documentId) && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidId(documentId) && isValidDocument(incoming()) && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && isValidId(documentId) && isValidDocument(incoming()) &&
+                       (existing().userId == request.auth.uid || isAdmin()) &&
+                       incoming().id == existing().id &&
+                       incoming().userId == existing().userId;
+      allow delete: if isSignedIn() && isValidId(documentId) && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // 3. AI Creations collection (Images, Videos, Transcripts, Search)
+    function isValidAICreation(data) {
+      return data.keys().hasAll(['id', 'userId', 'type', 'prompt']) &&
+             data.keys().hasOnly(['id', 'userId', 'type', 'prompt', 'mediaUrl', 'textContent', 'modelUsed', 'aspectRatio', 'createdAt', 'updatedAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.type is string && data.type.size() <= 32 &&
+             data.prompt is string && data.prompt.size() <= 2048;
+    }
+
+    match /ai_creations/{creationId} {
+      allow get: if isSignedIn() && isValidId(creationId) && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidId(creationId) && isValidAICreation(incoming()) && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && isValidId(creationId) && isValidAICreation(incoming()) &&
+                       (existing().userId == request.auth.uid || isAdmin()) &&
+                       incoming().id == existing().id &&
+                       incoming().userId == existing().userId;
+      allow delete: if isSignedIn() && isValidId(creationId) && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // 4. Backlog collection
+    function isValidBacklogItem(data) {
+      return data.keys().hasAll(['id', 'userId', 'title', 'status']) &&
+             data.keys().hasOnly(['id', 'userId', 'title', 'description', 'status', 'priority', 'hours', 'createdAt', 'updatedAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.title is string && data.title.size() <= 256 &&
+             data.status is string && (data.status == 'todo' || data.status == 'in_progress' || data.status == 'done');
+    }
+
+    match /backlog/{itemId} {
+      allow get: if isSignedIn() && isValidId(itemId) && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidId(itemId) && isValidBacklogItem(incoming()) && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && isValidId(itemId) && isValidBacklogItem(incoming()) &&
+                       (existing().userId == request.auth.uid || isAdmin()) &&
+                       incoming().id == existing().id &&
+                       incoming().userId == existing().userId;
+      allow delete: if isSignedIn() && isValidId(itemId) && (existing().userId == request.auth.uid || isAdmin());
+    }
+  }
+}

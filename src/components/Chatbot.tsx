@@ -1,32 +1,25 @@
-import { useRef, useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useConversation } from "@11labs/react";
-import { ChatMessage } from "./chat/ChatMessage";
-import { ChatInput } from "./chat/ChatInput";
-import { ChatHeader } from "./chat/ChatHeader";
-import { ChatSuggestions } from "./chat/ChatSuggestions";
-import { format } from "date-fns";
-import { pl } from "date-fns/locale";
-import { useChat } from "@/hooks/useChat";
-import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { motion, AnimatePresence } from "framer-motion";
+import { useConversation } from '@11labs/react';
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useChat } from '@/hooks/useChat';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
+import { ChatHeader } from './chat/ChatHeader';
+import { ChatInput } from './chat/ChatInput';
+import { ChatMessage } from './chat/ChatMessage';
+import { ChatSuggestions } from './chat/ChatSuggestions';
 
 export function Chatbot() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const {
-    messages,
-    input,
-    setInput,
-    handleSubmit,
-    isPending,
-    clearConversation
-  } = useChat();
+  const { messages, input, setInput, handleSubmit, isPending, clearConversation } = useChat();
 
   const { isRecording, handleVoiceInput } = useSpeechRecognition((transcript) => {
     setInput(transcript);
-    const userMessage = { role: "user" as const, content: transcript, timestamp: new Date() };
+    const userMessage = { role: 'user' as const, content: transcript, timestamp: new Date() };
     handleSubmit({ preventDefault: () => {} } as React.FormEvent);
   });
 
@@ -34,7 +27,7 @@ export function Chatbot() {
     apiKey: localStorage.getItem('ELEVENLABS_API_KEY') || '',
     overrides: {
       tts: {
-        voiceId: "XB0fDUnXU5powFXDhCwa",
+        voiceId: 'XB0fDUnXU5powFXDhCwa',
       },
     },
     onError: (error) => {
@@ -44,7 +37,9 @@ export function Chatbot() {
 
   useEffect(() => {
     if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const scrollContainer = scrollAreaRef.current.querySelector(
+        '[data-radix-scroll-area-viewport]'
+      );
       if (scrollContainer) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
@@ -62,16 +57,16 @@ export function Chatbot() {
   const handleSaveHistory = () => {
     const historyText = messages
       .map((msg) => {
-        const time = format(msg.timestamp, "HH:mm", { locale: pl });
-        return `[${time}] ${msg.role === "user" ? "Użytkownik" : "Asystent"}: ${msg.content}`;
+        const time = format(msg.timestamp, 'HH:mm', { locale: pl });
+        return `[${time}] ${msg.role === 'user' ? 'Użytkownik' : 'Asystent'}: ${msg.content}`;
       })
-      .join("\n\n");
+      .join('\n\n');
 
-    const blob = new Blob([historyText], { type: "text/plain" });
+    const blob = new Blob([historyText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `chat-history-${format(new Date(), "yyyy-MM-dd-HH-mm")}.txt`;
+    a.download = `chat-history-${format(new Date(), 'yyyy-MM-dd-HH-mm')}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -98,13 +93,15 @@ export function Chatbot() {
         onSaveHistory={handleSaveHistory}
         isTyping={isTyping}
       />
-      
+
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 md:p-6 overflow-y-auto">
         {messages.length === 1 && (
-          <ChatSuggestions onSuggestionClick={(suggestion) => {
-            setInput(suggestion);
-            handleSubmit({ preventDefault: () => {} } as React.FormEvent);
-          }} />
+          <ChatSuggestions
+            onSuggestionClick={(suggestion) => {
+              setInput(suggestion);
+              handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+            }}
+          />
         )}
         <AnimatePresence>
           <div className="space-y-4 md:space-y-6">

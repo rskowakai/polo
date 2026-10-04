@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useRef, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export const useSpeechRecognition = (onTranscript: (transcript: string) => void) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -11,9 +11,9 @@ export const useSpeechRecognition = (onTranscript: (transcript: string) => void)
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Speech recognition is not supported in this browser.",
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Speech recognition is not supported in this browser.',
         });
         return;
       }
@@ -22,18 +22,18 @@ export const useSpeechRecognition = (onTranscript: (transcript: string) => void)
       recognitionRef.current.onresult = (event: any) => {
         const transcript = Array.from(event.results)
           .map((result: any) => result[0].transcript)
-          .join("");
+          .join('');
         onTranscript(transcript);
         setIsRecording(false);
         recognitionRef.current?.stop();
       };
 
       recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
+        console.error('Speech recognition error:', event.error);
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Error during speech recognition. Please try again.",
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Error during speech recognition. Please try again.',
         });
         setIsRecording(false);
       };
@@ -53,6 +53,6 @@ export const useSpeechRecognition = (onTranscript: (transcript: string) => void)
 
   return {
     isRecording,
-    handleVoiceInput
+    handleVoiceInput,
   };
 };

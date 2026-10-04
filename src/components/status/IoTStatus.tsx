@@ -1,33 +1,33 @@
-import { useCompanyStore } from "@/components/CompanySidebar";
-import { companiesData } from "@/data/companies";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { 
-  Cpu, 
-  Signal, 
-  Network, 
-  Database, 
-  Clock, 
+import { motion } from 'framer-motion';
+import {
   Activity,
   AlertTriangle,
   CheckCircle,
+  ChevronRight,
+  Clock,
+  Cpu,
+  Database,
+  Network,
+  Signal,
   XCircle,
-  ChevronRight
-} from "lucide-react";
-import { motion } from "framer-motion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useState } from "react";
-import { DeviceStatusDetail } from "./DeviceStatusDetail";
-import { SystemPerformanceDetail } from "./SystemPerformanceDetail";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
-import { getCompanyStatusData } from "./IoTStatusData";
+} from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useCompanyStore } from '@/components/CompanySidebar';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { companiesData } from '@/data/companies';
+import { DeviceStatusDetail } from './DeviceStatusDetail';
+import { getCompanyStatusData } from './IoTStatusData';
+import { SystemPerformanceDetail } from './SystemPerformanceDetail';
 
 const StatusIndicator = ({ value }: { value: number }) => {
   const getColor = (value: number) => {
-    if (value >= 80) return "text-success";
-    if (value >= 50) return "text-warning";
-    return "text-danger";
+    if (value >= 80) return 'text-success';
+    if (value >= 50) return 'text-warning';
+    return 'text-danger';
   };
 
   const getIcon = (value: number) => {
@@ -39,16 +39,16 @@ const StatusIndicator = ({ value }: { value: number }) => {
   return getIcon(value);
 };
 
-const ProgressItem = ({ 
-  label, 
-  value, 
-  icon: Icon, 
+const ProgressItem = ({
+  label,
+  value,
+  icon: Icon,
   description,
   onClick,
-  className = ""
-}: { 
-  label: string; 
-  value: number; 
+  className = '',
+}: {
+  label: string;
+  value: number;
   icon: any;
   description: string;
   onClick?: () => void;
@@ -70,8 +70,8 @@ const ProgressItem = ({
             </div>
           </div>
           <div className="relative">
-            <Progress 
-              value={value} 
+            <Progress
+              value={value}
               className="h-2"
               style={{
                 background: 'rgba(255, 255, 255, 0.1)',
@@ -94,39 +94,33 @@ const ProgressItem = ({
 export function IoTStatus() {
   const { t } = useTranslation();
   const { selectedCompanyId } = useCompanyStore();
-  const selectedCompany = companiesData.find(
-    (company) => company.id === selectedCompanyId
-  );
+  const selectedCompany = companiesData.find((company) => company.id === selectedCompanyId);
   const [activeView, setActiveView] = useState<'overview' | 'devices' | 'system'>('overview');
 
-  const statusData = getCompanyStatusData(selectedCompanyId || "1");
+  const statusData = getCompanyStatusData(selectedCompanyId || '1');
   const { deviceStatus, systemStatus } = statusData;
 
   const getOverallStatus = (values: number[]) => {
     const average = values.reduce((a, b) => a + b, 0) / values.length;
-    if (average >= 80) return t("optimal");
-    if (average >= 50) return t("requiresAttention");
-    return t("critical");
+    if (average >= 80) return t('optimal');
+    if (average >= 50) return t('requiresAttention');
+    return t('critical');
   };
 
   const overallStatus = getOverallStatus([
     ...Object.values(deviceStatus),
-    ...Object.values(systemStatus)
+    ...Object.values(systemStatus),
   ]);
 
   if (activeView === 'devices') {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <div className="mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => setActiveView('overview')}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => setActiveView('overview')} className="mb-4">
             ← {t('back')}
           </Button>
         </div>
@@ -137,17 +131,13 @@ export function IoTStatus() {
 
   if (activeView === 'system') {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <div className="mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => setActiveView('overview')}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => setActiveView('overview')} className="mb-4">
             ← {t('back')}
           </Button>
         </div>
@@ -157,7 +147,7 @@ export function IoTStatus() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

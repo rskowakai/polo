@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Send, Mic, MicOff, Trash2, HelpCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useEffect, useRef } from "react";
+import { HelpCircle, Mic, MicOff, Send, Trash2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChatInputProps {
   input: string;
@@ -27,13 +27,13 @@ export function ChatInput({
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [input]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e as any);
     }
@@ -51,12 +51,17 @@ export function ChatInput({
           className="flex-1 min-h-[88px] max-h-[400px] resize-none text-base"
           disabled={isPending}
         />
-        
+
         <div className="flex gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button type="submit" size="icon" disabled={isPending} className="shadow-sm h-11 w-11">
+                <Button
+                  type="submit"
+                  size="icon"
+                  disabled={isPending}
+                  className="shadow-sm h-11 w-11"
+                >
                   <Send className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -65,7 +70,7 @@ export function ChatInput({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -81,7 +86,7 @@ export function ChatInput({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isRecording ? "Zatrzymaj nagrywanie" : "Rozpocznij nagrywanie"}</p>
+                <p>{isRecording ? 'Zatrzymaj nagrywanie' : 'Rozpocznij nagrywanie'}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
