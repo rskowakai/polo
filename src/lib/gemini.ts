@@ -1,28 +1,38 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { scrubPII } from '@/utils/guardrails';
 
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-
-if (!API_KEY) {
-  console.error("Brak klucza API dla Gemini. Proszę dodać VITE_GOOGLE_API_KEY.");
-}
-
-const genAI = new GoogleGenerativeAI(API_KEY || "");
-
-export const generateGeminiResponse = async (prompt: string) => {
-  if (!API_KEY) {
-    return "Przepraszam, ale brak skonfigurowanego klucza API dla Gemini. Proszę skontaktować się z administratorem.";
-  }
-
+/**
+ * Server-proxied Gemini response generator
+ * All API key secrets remain isolated on the backend.
+ */
+export const generateGeminiResponse = async (prompt: string, context?: string): Promise<string> => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
+    const cleanPrompt = scrubPII(prompt);
+    const cleanContext = context ? scrubPII(context) : undefined;
+
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: cleanPrompt,
+        context: cleanContext,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      if (err.reply) return err.reply;
+      throw new Error(err.error || `HTTP error ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.reply || data.text || '';
   } catch (error) {
-    console.error("Błąd podczas komunikacji z Gemini:", error);
-    return "Przepraszam, wystąpił błąd podczas przetwarzania zapytania. Proszę spróbować ponownie.";
+    console.error("Błąd podczas komunikacji z serwerem Gemini:", error);
+    return "Przepraszam, wystąpił problem podczas przetwarzania zapytania przez asystenta AI. Upewnij się, że serwer backendowy jest aktywny.";
   }
 };
 
-// Alias for backward compatibility
+// Backward-compatibility alias
 export const getGeminiResponse = generateGeminiResponse;

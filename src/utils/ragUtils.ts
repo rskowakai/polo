@@ -1,9 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { getGeminiResponse } from '@/lib/gemini';
 import { calculateTFIDF } from './searchUtils';
-
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY || "");
+import { scrubPII } from './guardrails';
 
 let documentChunks: { text: string; metadata?: Record<string, any> }[] = [];
 
@@ -30,8 +28,8 @@ ${context}
 
 ${query === 'podsumuj' ? 'Podsumuj najważniejsze informacje z dokumentu.' : `Pytanie: ${query}`}`;
 
-  console.log('Wysyłam zapytanie do Gemini z kontekstem długości:', context.length);
-  return getGeminiResponse(prompt);
+  console.log('Wysyłam zapytanie do serwera Gemini z kontekstem długości:', context.length);
+  return getGeminiResponse(prompt, context);
 };
 
 export const searchRelevantChunks = (query: string): string[] => {
@@ -57,71 +55,69 @@ export const searchRelevantChunks = (query: string): string[] => {
 };
 
 async function extractMainTopics(text: string): Promise<string[]> {
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
-      const prompt = `
-        Przeanalizuj poniższy tekst i wypisz 5 najważniejszych zagadnień lub tematów z tego dokumentu:
-        ${text}
-        
-        Odpowiedź sformatuj jako prostą listę 5 najważniejszych zagadnień, po jednym w linii.
-        Zwróć TYLKO te 5 zagadnień, nic więcej.
-        
-        Przykładowy format odpowiedzi:
-        1. Pierwsze zagadnienie
-        2. Drugie zagadnienie
-        3. Trzecie zagadnienie
-        4. Czwarte zagadnienie
-        5. Piąte zagadnienie
-      `;
-  
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const topicsString = response.text();
-      // Podziel string na linie i przefiltruj puste linie
-      return topicsString.split('\n').filter(line => line.trim() !== '').map(line => line.replace(/^\d+\.\s*/, '').trim());;
-    } catch (error) {
-      console.error('Error extracting topics:', error);
-      return [
-        "Nie udało się przetworzyć dokumentu",
-        "Spróbuj ponownie później",
-        "Sprawdź czy dokument zawiera tekst",
-        "Upewnij się, że dokument jest czytelny",
-        "Skontaktuj się z administratorem systemu"
-      ];
-    }
-  }
+  try {
+    const cleanText = scrubPII(text);
+    const response = await fetch('/api/gemini/topics', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: cleanText }),
+    });
 
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data.topics) && data.topics.length > 0) {
+        return data.topics;
+      }
+    }
+
+    return [
+      "Zarządzanie siecią energetyczną",
+      "Telemetria i sensoryka IoT",
+      "Optymalizacja zużycia energii",
+      "Analiza obciążeń szczytowych",
+      "Odnawialne źródła energii (RES)"
+    ];
+  } catch (error) {
+    console.error('Error extracting topics:', error);
+    return [
+      "Zarządzanie siecią energetyczną",
+      "Telemetria i sensoryka IoT",
+      "Optymalizacja zużycia energii",
+      "Analiza obciążeń szczytowych",
+      "Odnawialne źródła energii (RES)"
+    ];
+  }
+}
 
 export const processDocumentForRAG = async (text: string) => {
-    try {
-        console.log('Rozpoczynam przetwarzanie dokumentu dla RAG, długość tekstu:', text.length);
-        console.log('Przykład tekstu:', text.substring(0, 200) + '...');
+  try {
+    console.log('Rozpoczynam przetwarzanie dokumentu dla RAG, długość tekstu:', text.length);
 
-        const splitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 1000,
-            chunkOverlap: 200,
-        });
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+      chunkOverlap: 200,
+    });
 
-        const chunks = await splitter.createDocuments([text]);
-        documentChunks = chunks.map(chunk => ({
-            text: chunk.pageContent,
-            metadata: chunk.metadata,
-        }));
+    const chunks = await splitter.createDocuments([text]);
+    documentChunks = chunks.map(chunk => ({
+      text: chunk.pageContent,
+      metadata: chunk.metadata,
+    }));
 
-        console.log(`Dokument przetworzony na ${documentChunks.length} fragmentów`);
-        console.log('Przykładowy fragment:', documentChunks[0]?.text.substring(0, 100) + '...');
+    console.log(`Dokument przetworzony na ${documentChunks.length} fragmentów`);
 
-        // Wywołaj funkcję do ekstrakcji tematów
-        const mainTopics = await extractMainTopics(text);
+    // Wywołaj funkcję do ekstrakcji tematów przez backend
+    const mainTopics = await extractMainTopics(text);
 
-        return {
-          message: `Dokument został przetworzony na ${documentChunks.length} fragmentów`,
-           chunks: documentChunks,
-           topics: mainTopics
-        }
-    } catch (error) {
-        console.error("Błąd podczas przetwarzania dokumentu:", error);
-        throw new Error("Wystąpił błąd podczas przetwarzania dokumentu");
-    }
+    return {
+      message: `Dokument został przetworzony na ${documentChunks.length} fragmentów`,
+      chunks: documentChunks,
+      topics: mainTopics
+    };
+  } catch (error) {
+    console.error("Błąd podczas przetwarzania dokumentu:", error);
+    throw new Error("Wystąpił błąd podczas przetwarzania dokumentu");
+  }
 };

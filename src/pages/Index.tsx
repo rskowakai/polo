@@ -31,6 +31,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { IntegrationsPanel } from "@/components/integrations/IntegrationsPanel";
 import { ExperimentsPanel } from "@/components/experiments/ExperimentsPanel";
+import { InnovationLab } from "@/components/digitaltwin/InnovationLab";
+import { Sparkles } from "lucide-react";
 import '../i18n/config';
 
 const Index = () => {
@@ -126,8 +128,10 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
-                  <LanguageSelector />
+                <TooltipTrigger asChild>
+                  <span className="inline-flex">
+                    <LanguageSelector />
+                  </span>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{t('changeLanguage', 'Change language')}</p>
@@ -159,6 +163,9 @@ const Index = () => {
                     <TabsTrigger value="sensors">{t('sensors')}</TabsTrigger>
                     <TabsTrigger value="integrations">Integracje</TabsTrigger>
                     <TabsTrigger value="experiments">Eksperymenty</TabsTrigger>
+                    <TabsTrigger value="innovation" className="font-semibold text-indigo-400 data-[state=active]:text-indigo-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> Polo 3.0 & Digital Twin 3D
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="spaces" className="space-y-6">
@@ -236,6 +243,10 @@ const Index = () => {
 
                   <TabsContent value="experiments">
                     <ExperimentsPanel />
+                  </TabsContent>
+
+                  <TabsContent value="innovation">
+                    <InnovationLab />
                   </TabsContent>
                 </Tabs>
               </motion.div>
