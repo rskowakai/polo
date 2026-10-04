@@ -1,0 +1,7 @@
+{
+  "name": "Smart Grid Gems",
+  "description": "AI-powered smart grid management, energy analytics, IoT sensor monitoring, and weather forecasting dashboard.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
